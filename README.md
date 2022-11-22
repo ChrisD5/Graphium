@@ -2,4 +2,4 @@
 
 # In order to get the database/ backend running you need to configure a new user in sql. 
 # We have chosen not to use the standard user for security purposes.
-#database: MariaDB    Username: checkin    Password: checkin6
+# Database: MariaDB    Username: checkin    Password: checkin6
