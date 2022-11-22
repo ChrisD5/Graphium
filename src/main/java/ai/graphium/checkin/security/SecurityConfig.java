@@ -26,7 +26,10 @@ public class SecurityConfig {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserRepository userRepository) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth,
+                                UserDetailsService userDetailsService,
+                                PasswordEncoder passwordEncoder,
+                                UserRepository userRepository) throws Exception {
 
         // adding default admin user
         var admin = userRepository
@@ -46,6 +49,8 @@ public class SecurityConfig {
                 .csrf()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/logo.gif")
+                .permitAll()
                 .antMatchers("/admin/**")
                 .hasRole("ADMIN")
                 .antMatchers("/login")
