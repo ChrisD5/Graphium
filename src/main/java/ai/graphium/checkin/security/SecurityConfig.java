@@ -2,6 +2,7 @@ package ai.graphium.checkin.security;
 
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.enums.UserType;
+import ai.graphium.checkin.properties.AuthProperties;
 import ai.graphium.checkin.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,8 @@ public class SecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth,
                                 UserDetailsService userDetailsService,
                                 PasswordEncoder passwordEncoder,
-                                UserRepository userRepository) throws Exception {
+                                UserRepository userRepository,
+                                AuthProperties authProperties) throws Exception {
 
         // adding default admin user
         var admin = userRepository
@@ -41,6 +43,21 @@ public class SecurityConfig {
             admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN);
             userRepository.save(admin);
         }
+        if (authProperties.isGenerateDefaultUsers()) {
+            var supervisor = userRepository
+                    .findByEmail("supervisor@graphium.ai");
+            if (supervisor == null) {
+                supervisor = new User("supervisor@graphium.ai", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR);
+                userRepository.save(supervisor);
+            }
+            var employee = userRepository
+                    .findByEmail("employee@graphium.ai");
+            if (employee == null) {
+                employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE);
+                userRepository.save(employee);
+            }
+        }
+
 
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
