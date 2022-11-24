@@ -40,20 +40,20 @@ public class SecurityConfig {
         var admin = userRepository
                 .findByEmail(DEFAULT_USERNAME);
         if (admin == null) {
-            admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN);
+            admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN, "Admin", "+441234567890");
             userRepository.save(admin);
         }
         if (authProperties.isGenerateDefaultUsers()) {
             var supervisor = userRepository
                     .findByEmail("supervisor@graphium.ai");
             if (supervisor == null) {
-                supervisor = new User("supervisor@graphium.ai", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR);
+                supervisor = new User("supervisor@graphium.ai", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
                 userRepository.save(supervisor);
             }
             var employee = userRepository
                     .findByEmail("employee@graphium.ai");
             if (employee == null) {
-                employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE);
+                employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE, "Employee", "+441234567890");
                 userRepository.save(employee);
             }
         }
@@ -71,8 +71,6 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/logo.gif")
                 .permitAll()
-                .antMatchers("/admin/**")
-                .hasRole("ADMIN")
                 .antMatchers("/login")
                 .permitAll()
                 .antMatchers("/logout")
