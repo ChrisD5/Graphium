@@ -12,4 +12,19 @@ public class AdminController {
     public String adminHomeController() {
         return "admin/index";
     }
+
+    @GetMapping("/e")
+    public String adminEmployeesController() {
+        return "admin/manage-employees";
+    }
+
+    @GetMapping("/s")
+    public String adminSupervisorsController() {
+        return "admin/manage-supervisors";
+    }
+
+    @GetMapping("/team")
+    public String adminTeamsController() {
+        return "admin/manage-teams";
+    }
 }
