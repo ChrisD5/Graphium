@@ -76,4 +76,9 @@ public class EmployeeController {
     public String employeeSettingsController() {
         return "employee/settings";
     }
+
+    @GetMapping("/profile")
+    public String employeeProfileController() {
+        return "employee/employee-profile";
+    }
 }
