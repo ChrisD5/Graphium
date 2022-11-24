@@ -1,11 +1,13 @@
 package ai.graphium.checkin.security;
 
 import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.enums.UserType;
 import ai.graphium.checkin.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     private static final String DEFAULT_USERNAME = "admin@graphium.ai";
@@ -35,7 +38,7 @@ public class SecurityConfig {
         var admin = userRepository
                 .findByEmail(DEFAULT_USERNAME);
         if (admin == null) {
-            admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD));
+            admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN);
             userRepository.save(admin);
         }
 
