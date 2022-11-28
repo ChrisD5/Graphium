@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.util.Calendar;
 
 @Getter
 @Setter
@@ -24,6 +26,7 @@ public class User {
         }
         this.name = name;
         this.phone = phone;
+        this.created = new Date(Calendar.getInstance().getTime().getTime());
     }
 
     @Id
@@ -54,6 +57,9 @@ public class User {
 
     @Column(nullable = false)
     private String phone;
+
+    @Column(nullable = false)
+    private Date created;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")

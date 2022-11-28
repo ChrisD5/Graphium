@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Manage Employees | Admin Portal')" />
+<body class="bg-nord-0">
+
+<div class="container mx-auto">
+  <div th:replace="fragments/navbars/admin-navbar :: navbar"/>
+  <div class="flex flex-col gap-4 mx-8 my-10">
+    <label class="text-nord-4 font-semibold tracking-wider text-lg">Create Employee</label>
+    <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${employee}" th:action="@{/a/e/create}" method="post">
+      <p th:classappend="${status == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${status}" th:text="${status == 'error' ? 'Error: ' + message : 'Success: ' + message}">
+        Error Creating Employee
+      </p>
+      <div class="flex">
+        <div class="mr-10 w-1/2">
+          <label class="block text-nord-4 text-md font-bold mb-2" for="email">
+            Full Name
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                 id="name" type="text" placeholder="Full Name" th:field="*{name}" name="name" th:value="${employee?.name}">
+        </div>
+        <div class="mr-10 w-1/2">
+          <label class="block text-nord-4 text-md font-bold mb-2" for="email">
+            Email
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                 th:field="*{email}" id="email" type="text" placeholder="Email" name="email" th:value="${employee?.email}">
+        </div>
+      </div>
+      <div class="my-5 flex">
+        <div class="mr-10 w-1/2">
+          <label class="block text-nord-4 text-md font-bold mb-2" for="phone">
+            Phone Number
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                 th:field="*{phone}" id="phone" type="tel" placeholder="Start with +44" pattern="[0-9+]{3}[0-9]{10}" th:value="${employee?.phone}">
+        </div>
+        <div class="mr-10 w-1/2">
+          <label class="block text-gray-700 text-md font-bold mb-2" for="team">Select an option</label>
+          <select required th:value="${employee?.team_id}" name="id" th:field="*{team_id}" id="team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            <option th:value="0" selected>Assign a Team</option>
+            <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
+          </select>
+        </div>
+      </div>
+      <div class="my-5 flex items-center justify-between">
+        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit">
+          Create Employee
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="flex flex-col gap-4 mx-8 my-10">
+    <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Employees List</label>
+    <table class="border-collapse w-full">
+      <thead>
+      <tr>
+        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell lg:w-1/4">Employee Name</th>
+        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Assigned Team</th>
+        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Average Well-being Score</th>
+        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Action</th></tr>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="emp: ${employees}" class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer" th:text="${emp.name}">
+          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>
+        </td>
+        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static" th:text="${emp.team.name}">
+          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
+        </td>
+        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+          <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
+          <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
+        </td>
+        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
+          <a class="cursor-pointer" href="#">Remove</a>
+        </td>
+      </tr>
+<!--      <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>-->
+<!--          Sanil Jalan-->
+<!--        </td>-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>-->
+<!--          Dev-Ops-->
+<!--        </td>-->
+<!--        <td class="w-full lg:w-auto p-3 text-gray-800 text-center border-b text-center block lg:table-cell relative lg:static">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>-->
+<!--          <span class="rounded bg-nord-14 py-1 px-3 text-xs font-bold text-nord-6">8/10</span>-->
+<!--        </td>-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>-->
+<!--          <a class="cursor-pointer" href="#">Remove</a>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>-->
+<!--          Kavin Sundar-->
+<!--        </td>-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>-->
+<!--          Mobile Backend-->
+<!--        </td>-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>-->
+<!--          <span class="rounded bg-nord-13 py-1 px-3 text-xs font-bold text-nord-6">5/10</span>-->
+<!--        </td>-->
+<!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
+<!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>-->
+<!--          <a class="cursor-pointer" href="#">Remove</a>-->
+<!--        </td>-->
+<!--      </tr>-->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
