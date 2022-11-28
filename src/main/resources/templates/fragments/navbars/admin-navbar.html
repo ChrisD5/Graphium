@@ -2,7 +2,7 @@
 <body>
 <nav un-cloak th:fragment="navbar" class="bg-nord-0 my-2 px-2 sm:px-4 py-2.5 rounded">
     <div class="container flex flex-wrap items-center justify-between mx-auto">
-        <a href="/a" class="flex items-center bg-nord-6 p-1 rounded-lg">
+        <a href="/admin" class="flex items-center bg-nord-6 p-1 rounded-lg">
             <img src="/logo.gif" class="h-6 mr-3 sm:h-10" alt="Graphium Logo" />
             <span class="v-mid leading-3">
                 <span class="text-xl font-semibold text-nord-0">Graphium</span><br>
@@ -16,16 +16,16 @@
         <div class="hidden w-full md:block md:w-auto" id="navbar-default">
             <ul class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-nord-6 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-nord-6">
                 <li>
-                    <a th:href="@{/a}" th:classappend="${#httpServletRequest.getRequestURI() == '/a' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Home</a>
+                    <a th:href="@{/admin}" th:classappend="${#httpServletRequest.getRequestURI() == '/admin' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Home</a>
                 </li>
                 <li>
-                    <a th:href="@{/a/e}" th:classappend="${#httpServletRequest.getRequestURI() == '/a/e' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Employees</a>
+                    <a th:href="@{/admin/e}" th:classappend="${#httpServletRequest.getRequestURI() == '/admin/e' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Employees</a>
                 </li>
                 <li>
-                    <a th:href="@{/a/s}" th:classappend="${#httpServletRequest.getRequestURI() == '/a/s' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Supervisors</a>
+                    <a th:href="@{/admin/s}" th:classappend="${#httpServletRequest.getRequestURI() == '/admin/s' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Supervisors</a>
                 </li>
                 <li>
-                    <a th:href="@{/a/team}" th:classappend="${#httpServletRequest.getRequestURI() == '/a/team' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Teams</a>
+                    <a th:href="@{/admin/team}" th:classappend="${#httpServletRequest.getRequestURI() == '/admin/team' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Teams</a>
                 </li>
             </ul>
         </div>
