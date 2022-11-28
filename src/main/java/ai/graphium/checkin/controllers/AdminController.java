@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Controller
-@RequestMapping("/a")
+@RequestMapping("/admin")
 @Secured("ROLE_ADMIN")
 public class AdminController {
 
