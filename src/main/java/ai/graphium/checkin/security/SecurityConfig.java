@@ -59,6 +59,13 @@ public class SecurityConfig {
                 employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE, "Employee", "+441234567890");
                 userRepository.save(employee);
             }
+            var employeeSupervisor = userRepository
+                    .findByEmail("employeesupervisor@graphium.ai");
+            if (employeeSupervisor == null) {
+                employeeSupervisor = new User("employeesupervisor@graphium.ai", passwordEncoder.encode("employeesupervisor"), UserType.EMPLOYEE, "EmployeeSupervisor", "+441234565490");
+                employeeSupervisor.setSupervisor(true);
+                userRepository.save(employeeSupervisor);
+            }
             var teams = teamRepository
                     .findAll();
             if (teams.size() < 1) {
