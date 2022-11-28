@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
+@Entity
 public class CheckIn {
 
     @Id
