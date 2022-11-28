@@ -51,6 +51,7 @@ public class SecurityConfig {
                     .findByEmail("supervisor@graphium.ai");
             if (supervisor == null) {
                 supervisor = new User("supervisor@graphium.ai", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
+                supervisor.setEmployee(true);
                 userRepository.save(supervisor);
             }
             var employee = userRepository
@@ -58,6 +59,13 @@ public class SecurityConfig {
             if (employee == null) {
                 employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE, "Employee", "+441234567890");
                 userRepository.save(employee);
+            }
+            var employeeSupervisor = userRepository
+                    .findByEmail("employeesupervisor@graphium.ai");
+            if (employeeSupervisor == null) {
+                employeeSupervisor = new User("employeesupervisor@graphium.ai", passwordEncoder.encode("employeesupervisor"), UserType.EMPLOYEE, "EmployeeSupervisor", "+441234565490");
+                employeeSupervisor.setSupervisor(true);
+                userRepository.save(employeeSupervisor);
             }
             var teams = teamRepository
                     .findAll();
