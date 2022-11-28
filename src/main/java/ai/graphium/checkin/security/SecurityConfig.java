@@ -51,6 +51,7 @@ public class SecurityConfig {
                     .findByEmail("supervisor@graphium.ai");
             if (supervisor == null) {
                 supervisor = new User("supervisor@graphium.ai", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
+                supervisor.setEmployee(true);
                 userRepository.save(supervisor);
             }
             var employee = userRepository
