@@ -4,10 +4,12 @@ import ai.graphium.checkin.enums.UserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -64,5 +66,12 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "users_checkins"
+    )
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private Set<CheckIn> checkIns;
 
 }
