@@ -34,9 +34,6 @@ public class EmployeeController {
     }
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private NoteRepository noteRepository;
 
     @Autowired
@@ -100,7 +97,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/profile/edit")
-    public String formSubmit(@ModelAttribute User user, Model model, Authentication authentication){
+    public String formSubmit(@ModelAttribute User user, Model model, Authentication authentication) {
         System.out.println(user.getName());
         System.out.println(user.getPhone());
         var userLookUp = userRepository.findByEmail(authentication.getName());
