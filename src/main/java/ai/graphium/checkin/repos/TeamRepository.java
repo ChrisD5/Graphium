@@ -11,5 +11,5 @@ public interface TeamRepository extends JpaRepository<Team, String> {
 
     Team findById(Long id);
 
-    Boolean existsById(Long id);
+    boolean existsById(Long id);
 }

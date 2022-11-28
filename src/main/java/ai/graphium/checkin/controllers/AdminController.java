@@ -53,16 +53,14 @@ public class AdminController {
 
     @PostMapping("/e/create")
     public String adminCreateEmployeeSubmit(Model model, RedirectAttributes redirectAttributes, @ModelAttribute CreateEmployeeForm employee) {
-        Boolean emailExists = userRepository.existsByEmail(employee.getEmail());
-        System.out.println(emailExists);
+        boolean emailExists = userRepository.existsByEmail(employee.getEmail());
         if (emailExists) {
             redirectAttributes.addFlashAttribute("status", "error");
             redirectAttributes.addFlashAttribute("message", "Email Address Already Exists");
             redirectAttributes.addFlashAttribute("employee", employee);
             return "redirect:/a/e";
         }
-        System.out.println(employee.getTeam_id());
-        Boolean teamExists = teamRepository.existsById(employee.getTeam_id());
+        boolean teamExists = teamRepository.existsById(employee.getTeam_id());
         if (!teamExists) {
             redirectAttributes.addFlashAttribute("status", "error");
             redirectAttributes.addFlashAttribute("message", "This team does not exist!");
