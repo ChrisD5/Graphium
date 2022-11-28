@@ -44,7 +44,7 @@ public class AdminController {
         if (model.getAttribute("employee") == null) {
             model.addAttribute("employee", new CreateEmployeeForm());
         }
-        Collection<User> employees = userRepository.findFirst10ByEmployee(true);
+        Collection<User> employees = userRepository.findFirst10ByEmployeeAndSupervisorIsFalse(true);
         List<Team> teams = teamRepository.findAll();
         model.addAttribute("teams", teams);
         model.addAttribute("employees", employees);
@@ -52,7 +52,7 @@ public class AdminController {
     }
 
     @PostMapping("/e/create")
-    public String adminCreateEmployeeSubmit(Model model, RedirectAttributes redirectAttributes, @ModelAttribute CreateEmployeeForm employee) {
+    public String adminCreateEmployeeSubmit(RedirectAttributes redirectAttributes, @ModelAttribute CreateEmployeeForm employee) {
         boolean emailExists = userRepository.existsByEmail(employee.getEmail());
         if (emailExists) {
             redirectAttributes.addFlashAttribute("status", "error");

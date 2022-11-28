@@ -11,5 +11,5 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     boolean existsByEmail(String email);
 
-    Collection<User> findFirst10ByEmployee(Boolean is_employee);
+    Collection<User> findFirst10ByEmployeeAndSupervisorIsFalse(Boolean is_employee);
 }
