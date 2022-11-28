@@ -3,9 +3,9 @@
 <head th:replace="fragments/header :: header('Login | Graphium Employee Portal')"/>
 <body>
 <!-- Login Page with Tailwind -->
-<div class="bg-nord-0 flex items-center justify-center h-screen">
+<div un-cloak class="bg-nord-0 flex items-center justify-center h-screen">
     <div class="w-full max-w-xs">
-        <form class="bg-nord1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:action="@{/login}" method="post">
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:action="@{/login}" method="post">
             <!-- Logo -->
             <div class="flex justify-center">
                 <div class="bg-nord-6 rounded w-2/5">
