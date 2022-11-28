@@ -82,6 +82,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/logo.gif")
                 .permitAll()
+                .antMatchers("/js/**")
+                .permitAll()
                 .antMatchers("/login")
                 .permitAll()
                 .antMatchers("/logout")

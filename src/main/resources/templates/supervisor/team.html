@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Team <name> | Supervisor Portal')" />
+<head th:replace="fragments/header :: header('Team <name> | Supervisor Portal')"/>
 <body>
 
 <div class="container mx-auto">
-  <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+    <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
 </div>
 
 </body>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </html>
