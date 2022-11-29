@@ -58,14 +58,14 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("status", "error");
             redirectAttributes.addFlashAttribute("message", "Email Address Already Exists");
             redirectAttributes.addFlashAttribute("employee", employee);
-            return "redirect:/a/e";
+            return "redirect:/admin/e";
         }
         boolean teamExists = teamRepository.existsById(employee.getTeam_id());
         if (!teamExists) {
             redirectAttributes.addFlashAttribute("status", "error");
             redirectAttributes.addFlashAttribute("message", "This team does not exist!");
             redirectAttributes.addFlashAttribute("employee", employee);
-            return "redirect:/a/e";
+            return "redirect:/admin/e";
         }
         User newEmployee = new User(employee.getEmail(), passwordEncoder.encode("employee"), UserType.EMPLOYEE, employee.getName(), employee.getPhone());
         Team team = teamRepository.findById(employee.getTeam_id());
@@ -73,7 +73,7 @@ public class AdminController {
         userRepository.save(newEmployee);
         redirectAttributes.addFlashAttribute("status", "success");
         redirectAttributes.addFlashAttribute("message", String.format("Added %s as a new employee", newEmployee.getName()));
-        return "redirect:/a/e";
+        return "redirect:/admin/e";
     }
 
     @GetMapping("/s")
