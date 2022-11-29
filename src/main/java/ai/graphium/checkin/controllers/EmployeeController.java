@@ -3,11 +3,15 @@ package ai.graphium.checkin.controllers;
 import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Note;
 import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.enums.AlertType;
+import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.CheckinSubmission;
 import ai.graphium.checkin.repos.CheckInRepository;
 import ai.graphium.checkin.repos.NoteRepository;
 import ai.graphium.checkin.repos.UserRepository;
+import ai.graphium.checkin.services.AlertService;
+import ai.graphium.checkin.services.MailerService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -39,8 +43,11 @@ public class EmployeeController {
     @Autowired
     private CheckInRepository checkInRepository;
 
+    @Autowired
+    private AlertService alertService;
+
     @PostMapping("/checkin")
-    public String checkin(CheckinSubmission checkinSubmission, Authentication authentication, RedirectAttributes atts) {
+    public String checkin(CheckinSubmission checkinSubmission, Authentication authentication, RedirectAttributes atts) throws Exception {
 
         String ratingStr = checkinSubmission.getRating();
         int rating;
@@ -73,6 +80,14 @@ public class EmployeeController {
         userRepository.save(user);
 
         atts.addFlashAttribute("message", "Successfully checked in!");
+
+        if (checkIn.getRating() <= 3)
+            alertService.createAlert(
+                    "Low check-in rating",
+                    "Are you okay?<br>Your check-in rating was " + checkIn.getRating() + " out of 10 today.<br>Would you like to schedule a meeting with your supervisor?",
+                    "Your employee " + user.getName() + " has checked-in with a rating of " + checkIn.getRating() + " out of 10 today.<br>Would it help to schedule an meeting with them?",
+                    AlertType.MEDIUM, AlertVisibility.ALL,
+                    user, user.getTeam().getSupervisor());
 
         return "redirect:/e";
     }
