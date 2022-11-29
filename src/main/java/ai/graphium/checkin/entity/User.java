@@ -63,7 +63,7 @@ public class User {
     @Column(nullable = false)
     private Date created;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
