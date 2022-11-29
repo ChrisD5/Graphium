@@ -28,7 +28,7 @@ public class HomeController {
     }
 
     @RequestMapping(value="/logout", method = RequestMethod.GET)
-    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+    public String logoutPage () {
         SecurityContextHolder.getContext().setAuthentication(null);
         return "redirect:/login";
     }
