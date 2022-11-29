@@ -32,6 +32,9 @@
                 <li>
                     <a th:href="@{/e/settings}" th:classappend="${#httpServletRequest.getRequestURI() == '/e/settings' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4">Settings</a>
                 </li>
+                <li>
+                    <a th:href="@{/logout}" th:classappend="${#httpServletRequest.getRequestURI() == '/logout' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4">Logout</a>
+                </li>
             </ul>
         </div>
     </div>
