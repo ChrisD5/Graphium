@@ -30,7 +30,8 @@ public class AlertService {
             mailerService.sendMail(target.getEmail(), title, targetMessage);
         }
 
-        if (visibility == AlertVisibility.SUPERVISOR || visibility == AlertVisibility.ALL) {
+        // Alert supervisor only if the alert has a medium or higher type
+        if (type.compareTo(AlertType.MEDIUM) >= 0 && (visibility == AlertVisibility.SUPERVISOR || visibility == AlertVisibility.ALL)) {
             mailerService.sendMail(supervisor.getEmail(), title, supervisorMessage);
         }
     }
