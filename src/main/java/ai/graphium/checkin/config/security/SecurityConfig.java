@@ -1,4 +1,4 @@
-package ai.graphium.checkin.security;
+package ai.graphium.checkin.config.security;
 
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
@@ -60,13 +60,29 @@ public class SecurityConfig {
                 employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE, "Employee", "+441234567890");
                 userRepository.save(employee);
             }
+            var emailEmployee = userRepository
+                    .findByEmail("kavin@kavin.rocks");
+            if (emailEmployee == null) {
+                emailEmployee = new User("kavin@kavin.rocks", passwordEncoder.encode("kavin"), UserType.EMPLOYEE, "Kavin", "+441234567890");
+                userRepository.save(emailEmployee);
+            }
+            var emailSupervisor = userRepository
+                    .findByEmail("supervisor@kavin.rocks");
+            if (emailSupervisor == null) {
+                emailSupervisor = new User("supervisor@kavin.rocks", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
+                userRepository.save(emailSupervisor);
+            }
             var teams = teamRepository
                     .findAll();
-            if (teams.size() < 1) {
+            if (teams.size() < 2) {
                 var team1 = new Team(supervisor, "Dev Ops");
                 employee.setTeam(team1);
+                var team2 = new Team(emailSupervisor, "Flutter Developer");
+                emailEmployee.setTeam(team2);
                 teamRepository.save(team1);
+                teamRepository.save(team2);
                 userRepository.save(employee);
+                userRepository.save(emailEmployee);
             }
         }
 

@@ -1,4 +1,4 @@
-package ai.graphium.checkin.security;
+package ai.graphium.checkin.services.security;
 
 import ai.graphium.checkin.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
