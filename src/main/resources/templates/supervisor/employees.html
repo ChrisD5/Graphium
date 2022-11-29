@@ -20,14 +20,16 @@
         </thead>
         <tbody>
         <tr th:each="emp: ${employees}" class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer" th:text="${emp.name}">
+            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                 <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>
-            </td>
-            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static" th:text="${emp.team.name}">
-                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
+                <span th:text="${emp.name}"></span>
             </td>
             <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
+                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Assigned Team</span>
+                <span th:text="${emp.team.name}"></span>
+            </td>
+            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
                 <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
             </td>
             <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">

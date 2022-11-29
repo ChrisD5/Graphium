@@ -27,6 +27,10 @@
                 <li>
                     <a th:href="@{/admin/team}" th:classappend="${#httpServletRequest.getRequestURI() == '/admin/team' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent'}" class="block py-2 pl-3 pr-4" aria-current="page">Manage Teams</a>
                 </li>
+                <li>
+                    <a th:href="@{/logout}"  class="text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent block py-2 pl-3 pr-4">Logout</a>
+                </li>
+
             </ul>
         </div>
     </div>
