@@ -6,16 +6,16 @@
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
 </div>
 
-<body>
+<body class="bg-nord-0">
 <div class="p-0">
-    <div class="p-8 bg-white shadow mt-10">
+    <div class="p-8 shadow mt-10">
         <div class="grid grid-cols-1 md:grid-cols-3">
             <div class="grid grid-cols-3 text-center order-last md:order-first mt-10 md:mt-0">
 
             </div>
             <div class="relative">
                 <img src="https://media-exp1.licdn.com/dms/image/D5603AQF2trvz5Sb03A/profile-displayphoto-shrink_800_800/0/1664486525855?e=2147483647&v=beta&t=NRKsuRu7q6R4bAxXlB1p3GjMyymDHBRrnJYle9375eM"
-                     class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-slate-600"
+                     class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-#ECEFF4"
                      alt="Profile Picture"/>
 
             </div>
@@ -29,30 +29,30 @@
 
         <div class="mt-5 text-center border-b pb-6">
 
-            <h1 class="text-3xl font-xs text-gray-700">Update Details<span
+            <h1 class="text-3xl font-xs text-nord-6">Update Details<span
                     class="font-light text-gray-500"></span>
             </h1>
             <form action="#" th:action="@{/e/profile/edit}" th:object="${user}" method="post">
                 <p class="mt-4 text-gray-500">Full-Name: <input type="text" pattern="[a-zA-Z ]+" th:field="*{name}"
                                                                 th:value="${user.name}"
-                                                                class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                                                                class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
                 </p>
                 <p class="mt-4 text-gray-500">Phone(+44): <input type="tel" pattern="[0-9+]{3}[0-9]{10}"
                                                                  th:field="*{phone}" th:value="${user.phone}"
-                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
                 </p>
 
-                <p class="mt-4 text-gray-500"><input type="submit" value="Submit"/> | <input type="reset"
+                <p class="mt-4 text-nord-6"><input type="submit" value="Submit"/> | <input type="reset"
                                                                                              value="Reset"/></p>
             </form>
 
         </div>
         <div class="mt-0 flex flex-col justify-center">
             <button
-                    class="text-slate-600 py-2 px-4  font-medium mt-4"
+                    class="text-nord-6 py-2 px-4  font-medium mt-4"
             >Supervisor Notes
             </button>
-            <p class="text-gray-600 text-center font-light lg:px-16">You've really outdone yourself this week Sanil;
+            <p class="text-nord-6 text-center font-light lg:px-16">You've really outdone yourself this week Sanil;
                 Great work on centering that div!</p>
 
         </div>
