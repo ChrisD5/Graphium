@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     Collection<User> findFirst10ByEmployeeAndSupervisorIsFalse(Boolean is_employee);
 
     Collection<User> findByTeamIdAndSupervisorIsFalse(long teamId);
+
+    Collection<User> findFirst10BySupervisorIsTrue();
 }
