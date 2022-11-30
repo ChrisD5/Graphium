@@ -7,11 +7,17 @@ import java.util.Collection;
 
 public interface UserRepository extends JpaRepository<User, String> {
 
+    User findById(long id);
+
     User findByEmail(String email);
 
     boolean existsByEmail(String email);
 
-    Collection<User> findFirst10ByEmployeeAndSupervisorIsFalse(Boolean is_employee);
+    boolean existsById(long id);
+
+    Collection<User> findByEmployeeAndSupervisorIsFalse(Boolean is_employee);
+
+    Collection<User> findBySupervisorIsTrue();
 
     Collection<User> findByTeamIdAndSupervisorIsFalse(long teamId);
 

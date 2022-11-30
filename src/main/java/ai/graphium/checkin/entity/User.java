@@ -67,6 +67,7 @@ public class User {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @SuppressWarnings("JpaAttributeTypeInspection")
     @ElementCollection
     @CollectionTable(
             name = "users_checkins"

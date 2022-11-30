@@ -19,8 +19,6 @@
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
                            id="name" type="text" placeholder="Full Name" th:field="*{name}" name="name" th:value="${supervisor?.name}">
                 </div>
-            </div>
-            <div class="my-5 flex">
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="email">
                         Email
@@ -28,12 +26,17 @@
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
                            th:field="*{email}" id="email" type="text" placeholder="Email" name="email" th:value="${supervisor?.email}">
                 </div>
+            </div>
+            <div class="my-5 flex">
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="phone">
                         Phone Number
                     </label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
                            th:field="*{phone}" id="phone" type="tel" placeholder="Start with +44" pattern="[0-9+]{3}[0-9]{10}" th:value="${supervisor?.phone}">
+                </div>
+                <div class="mr-10 w-1/2">
+
                 </div>
             </div>
             <div class="my-5 flex items-center justify-between">
@@ -57,14 +60,16 @@
             </thead>
             <tbody>
             <tr th:each="sup: ${supervisors}" class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer" th:text="${sup.name}">
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Supervisor Name</span>
-                </td>
-                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static" th:text="${'Test'}">
-                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
+                    <span th:text="${sup.name}"></span>
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-                    <span class="lg:hidden absolute top-0 left-0 bg-blue-200 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
+                    <span th:text="${sup.teamname}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
                     <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
@@ -72,42 +77,6 @@
                     <a class="cursor-pointer" href="#">Remove</a>
                 </td>
             </tr>
-            <!--      <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>-->
-            <!--          Sanil Jalan-->
-            <!--        </td>-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>-->
-            <!--          Dev-Ops-->
-            <!--        </td>-->
-            <!--        <td class="w-full lg:w-auto p-3 text-gray-800 text-center border-b text-center block lg:table-cell relative lg:static">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>-->
-            <!--          <span class="rounded bg-nord-14 py-1 px-3 text-xs font-bold text-nord-6">8/10</span>-->
-            <!--        </td>-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>-->
-            <!--          <a class="cursor-pointer" href="#">Remove</a>-->
-            <!--        </td>-->
-            <!--      </tr>-->
-            <!--      <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b block lg:table-cell relative lg:static cursor-pointer">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>-->
-            <!--          Kavin Sundar-->
-            <!--        </td>-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>-->
-            <!--          Mobile Backend-->
-            <!--        </td>-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>-->
-            <!--          <span class="rounded bg-nord-13 py-1 px-3 text-xs font-bold text-nord-6">5/10</span>-->
-            <!--        </td>-->
-            <!--        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">-->
-            <!--          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>-->
-            <!--          <a class="cursor-pointer" href="#">Remove</a>-->
-            <!--        </td>-->
-            <!--      </tr>-->
             </tbody>
         </table>
     </div>
