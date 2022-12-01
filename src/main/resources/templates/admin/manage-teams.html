@@ -34,11 +34,11 @@
     </div>
     <div class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Assign Supervisor to Team</label>
-        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${assignsupervisortoteam}" th:action="@{/admin/team/assign}"
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${assignsupervisortoteam}" th:action="@{/admin/team/assign/supervisor}"
               method="post">
-            <p th:classappend="${assignstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
-               class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${assignstatus}"
-               th:text="${assignstatus == 'error' ? 'Error: ' + assignmessage : 'Success: ' + assignmessage}">
+            <p th:classappend="${s_assignstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
+               class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${s_assignstatus}"
+               th:text="${s_assignstatus == 'error' ? 'Error: ' + s_assignmessage : 'Success: ' + s_assignmessage}">
                 Error Assigning Supervisor to Team
             </p>
             <div class="flex">
@@ -66,7 +66,44 @@
         </form>
     </div>
     <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Assign Employee to Team</label>
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${assignemployeetoteam}" th:action="@{/admin/team/assign/employee}"
+              method="post">
+            <p th:classappend="${e_assignstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
+               class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${e_assignstatus}"
+               th:text="${e_assignstatus == 'error' ? 'Error: ' + e_assignmessage : 'Success: ' + e_assignmessage}">
+                Error Assigning Employee to Team
+            </p>
+            <div class="flex">
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select an Employee</label>
+                    <select required th:value="${assignemployeetoteam?.employee_id}" name="employee_id" th:field="*{employee_id}" id="employee" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option th:value="0" selected>Select an Employee</option>
+                        <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.name}"></option>
+                    </select>
+                </div>
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select a Team</label>
+                    <select required th:value="${assignemployeetoteam?.team_id}" name="team_id" th:field="*{team_id}" id="emp_team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option th:value="0" selected>Select a Team</option>
+                        <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="my-5 flex items-center justify-between">
+                <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    Assign Employee to Team
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Teams List</label>
+        <p th:classappend="${delstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+           th:if="${delstatus}" th:text="${delstatus == 'error' ? 'Error: ' + delmessage : 'Success: ' + delmessage}">
+            Error Deleting Team
+        </p>
         <table class="border-collapse w-full">
             <thead>
             <tr>
@@ -99,7 +136,10 @@
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
-                    <a class="cursor-pointer" href="#">Remove</a>
+                    <form th:action="@{'/admin/team/delete/{id}'(id=${team.id})}" method="post">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="cursor-pointer">Delete</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

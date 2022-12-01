@@ -4,8 +4,11 @@ import ai.graphium.checkin.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, String> {
+
+    List<User> findAllByEmployeeAndSupervisorAndAdmin(boolean isEmployee, boolean isSupervisor, boolean isAdmin);
 
     User findById(long id);
 
