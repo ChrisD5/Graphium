@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     List<User> findAllByEmployeeAndSupervisorAndAdmin(boolean isEmployee, boolean isSupervisor, boolean isAdmin);
 
+    List<User> findAllByTeamId(long id);
+
     User findById(long id);
 
     User findByEmail(String email);

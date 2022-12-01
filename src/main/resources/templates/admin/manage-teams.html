@@ -20,7 +20,7 @@
                         Team Name
                     </label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                           id="name" type="text" placeholder="Team Name" th:field="*{name}" name="name"
+                           id="name" type="text" placeholder="Team Name" th:field="${team.name}" name="name"
                            th:value="${team?.name}" required>
                 </div>
             </div>
@@ -32,7 +32,7 @@
             </div>
         </form>
     </div>
-    <div class="flex flex-col gap-4 mx-8 my-10">
+    <div id="assignsup" class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Assign Supervisor to Team</label>
         <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${assignsupervisortoteam}" th:action="@{/admin/team/assign/supervisor}"
               method="post">
@@ -44,14 +44,14 @@
             <div class="flex">
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select a Supervisor</label>
-                    <select required th:value="${assignsupervisortoteam?.supervisor_id}" name="supervisor_id" th:field="*{supervisor_id}" id="supervisor" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select required th:value="${assignsupervisortoteam?.supervisor_id}" name="supervisor_id" th:field="${assignsupervisortoteam.supervisor_id}" id="supervisor" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option th:value="0" selected>Select a Supervisor</option>
                         <option th:each="supervisor : ${unassigned_supervisors}" th:value="${supervisor.id}" th:text="${supervisor.name}"></option>
                     </select>
                 </div>
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select a Team</label>
-                    <select required th:value="${assignsupervisortoteam?.team_id}" name="team_id" th:field="*{team_id}" id="team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select required th:value="${assignsupervisortoteam?.team_id}" name="team_id" th:field="${assignsupervisortoteam.team_id}" id="team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option th:value="0" selected>Select a Team</option>
                         <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
                     </select>
@@ -65,7 +65,7 @@
             </div>
         </form>
     </div>
-    <div class="flex flex-col gap-4 mx-8 my-10">
+    <div id="assignemp" class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Assign Employee to Team</label>
         <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${assignemployeetoteam}" th:action="@{/admin/team/assign/employee}"
               method="post">
@@ -77,14 +77,14 @@
             <div class="flex">
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select an Employee</label>
-                    <select required th:value="${assignemployeetoteam?.employee_id}" name="employee_id" th:field="*{employee_id}" id="employee" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select required th:value="${assignemployeetoteam?.employee_id}" name="employee_id" th:field="${assignemployeetoteam.employee_id}" id="employee" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option th:value="0" selected>Select an Employee</option>
                         <option th:each="employee : ${employees}" th:value="${employee.id}" th:text="${employee.name}"></option>
                     </select>
                 </div>
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select a Team</label>
-                    <select required th:value="${assignemployeetoteam?.team_id}" name="team_id" th:field="*{team_id}" id="emp_team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <select required th:value="${assignemployeetoteam?.team_id}" name="team_id" th:field="${assignemployeetoteam.team_id}" id="emp_team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option th:value="0" selected>Select a Team</option>
                         <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
                     </select>
@@ -98,7 +98,7 @@
             </div>
         </form>
     </div>
-    <div class="flex flex-col gap-4 mx-8 my-10">
+    <div id="teamslist" class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Teams List</label>
         <p th:classappend="${delstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
            th:if="${delstatus}" th:text="${delstatus == 'error' ? 'Error: ' + delmessage : 'Success: ' + delmessage}">

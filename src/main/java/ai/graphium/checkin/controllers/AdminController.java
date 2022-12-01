@@ -223,14 +223,14 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("s_assignstatus", "error");
             redirectAttributes.addFlashAttribute("s_assignmessage", "This supervisor does not exist");
             redirectAttributes.addFlashAttribute("assignsupervisortoteam", assignSupervisorToTeamForm);
-            return "redirect:/admin/team";
+            return "redirect:/admin/team#assignsup";
         }
         boolean hasTeam = teamRepository.existsBySupervisorId(assignSupervisorToTeamForm.getSupervisor_id());
         if (hasTeam) {
             redirectAttributes.addFlashAttribute("s_assignstatus", "error");
             redirectAttributes.addFlashAttribute("s_assignmessage", "This supervisor is already assigned to a team");
             redirectAttributes.addFlashAttribute("assignsupervisortoteam", assignSupervisorToTeamForm);
-            return "redirect:/admin/team";
+            return "redirect:/admin/team#assignsup";
         }
         Team team = teamRepository.findById(assignSupervisorToTeamForm.getTeam_id());
         User supervisor = userRepository.findById(assignSupervisorToTeamForm.getSupervisor_id());
@@ -239,7 +239,7 @@ public class AdminController {
         teamRepository.save(team);
         redirectAttributes.addFlashAttribute("s_assignstatus", "success");
         redirectAttributes.addFlashAttribute("s_assignmessage", String.format("%s supervisor of %s to %s", hadSupervisor ? "Re-assigned" : "Assigned", team.getName(), supervisor.getName()));
-        return "redirect:/admin/team";
+        return "redirect:/admin/team#assignsup";
     }
 
     @PostMapping("/team/assign/employee")
@@ -249,14 +249,14 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("e_assignstatus", "error");
             redirectAttributes.addFlashAttribute("e_assignmessage", "This employee does not exist");
             redirectAttributes.addFlashAttribute("assignemployeetoteam", assignEmployeeToTeamForm);
-            return "redirect:/admin/team";
+            return "redirect:/admin/team#assignemp";
         }
         boolean hasTeam = teamRepository.existsBySupervisorId(assignEmployeeToTeamForm.getEmployee_id());
         if (hasTeam) {
             redirectAttributes.addFlashAttribute("e_assignstatus", "error");
             redirectAttributes.addFlashAttribute("e_assignmessage", "This employee is already assigned to a team");
             redirectAttributes.addFlashAttribute("assignemployeetoteam", assignEmployeeToTeamForm);
-            return "redirect:/admin/team";
+            return "redirect:/admin/team#assignemp";
         }
         Team team = teamRepository.findById(assignEmployeeToTeamForm.getTeam_id());
         User employee = userRepository.findById(assignEmployeeToTeamForm.getEmployee_id());
@@ -265,7 +265,7 @@ public class AdminController {
         userRepository.save(employee);
         redirectAttributes.addFlashAttribute("e_assignstatus", "success");
         redirectAttributes.addFlashAttribute("e_assignmessage", String.format("%s employee of %s to %s", hadTeam ? "Re-assigned" : "Assigned", team.getName(), employee.getName()));
-        return "redirect:/admin/team";
+        return "redirect:/admin/team#assignemp";
     }
 
     @PostMapping("/team/delete/{id}")
@@ -274,11 +274,17 @@ public class AdminController {
         if (team == null) {
             redirectAttributes.addFlashAttribute("delstatus", "error");
             redirectAttributes.addFlashAttribute("delmessage", "This team does not exist");
-            return "redirect:/admin/team";
+            return "redirect:/admin/team#teamslist";
+        }
+        List<User> users = userRepository.findAllByTeamId(id);
+        if (users.size() > 0) {
+            redirectAttributes.addFlashAttribute("delstatus", "error");
+            redirectAttributes.addFlashAttribute("delmessage", "Re-Assign all employees to another team to delete this team");
+            return "redirect:/admin/team#teamslist";
         }
         teamRepository.delete(team);
         redirectAttributes.addFlashAttribute("delstatus", "success");
         redirectAttributes.addFlashAttribute("delmessage", String.format("Deleted %s", team.getName()));
-        return "redirect:/admin/team";
+        return "redirect:/admin/team#teamslist";
     }
 }
