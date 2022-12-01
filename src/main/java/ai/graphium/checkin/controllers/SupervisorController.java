@@ -52,8 +52,18 @@ public class SupervisorController {
         return "supervisor/employees";
     }
 
-    @GetMapping("/profile")
-    public String supervisorProfileController() {
+    @GetMapping("/profile/{id}")
+    public String supervisorProfileController(Model model, @PathVariable long id, Authentication authentication) {
+        User user = userRepository.findById(id);
+        if (user == null || user.getTeam() == null) {
+            return "redirect:/s/employees";
+        }
+        Team team = teamRepository.findBySupervisorEmail(authentication.getName());
+        if (user.getTeam().getId() != team.getId()) {
+            return "redirect:/s/employees";
+        }
+        model.addAttribute("user", user);
         return "supervisor/profile";
+
     }
 }
