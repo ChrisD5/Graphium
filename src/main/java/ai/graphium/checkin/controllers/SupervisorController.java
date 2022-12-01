@@ -1,5 +1,6 @@
 package ai.graphium.checkin.controllers;
 
+import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.repos.TeamRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Comparator;
 
 @AllArgsConstructor
 @Controller
@@ -45,7 +47,6 @@ public class SupervisorController {
     public String supervisorEmployeesController(Model model, Authentication authentication) {
         Team team = teamRepository.findBySupervisorEmail(authentication.getName());
         Collection<User> employees = userRepository.findByTeamIdAndSupervisorIsFalse(team.getId());
-        System.out.println(employees.size());
         model.addAttribute("employees", employees);
         return "supervisor/employees";
     }
@@ -61,6 +62,12 @@ public class SupervisorController {
             return "redirect:/s/employees";
         }
         model.addAttribute("user", user);
+        model.addAttribute("checkins",
+                user.getCheckIns()
+                        .stream()
+                        .sorted(Comparator.comparingLong(CheckIn::getTime).reversed())
+                        .toList()
+        );
         model.addAttribute("image", user.getImage() != null ? Base64.getEncoder().encodeToString(user.getImage()) : null);
         return "supervisor/profile";
 
