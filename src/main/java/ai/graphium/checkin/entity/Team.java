@@ -2,7 +2,6 @@ package ai.graphium.checkin.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "teams")
 public class Team {
 
     @Id
@@ -19,7 +19,7 @@ public class Team {
     private long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_supervisor_id", nullable = false)
+    @JoinColumn(name = "team_supervisor_id", nullable = true)
     private User supervisor;
 
     @Column(nullable = false)
@@ -27,6 +27,10 @@ public class Team {
 
     public Team(User supervisor, String name) {
         this.supervisor = supervisor;
+        this.name = name;
+    }
+
+    public Team(String name) {
         this.name = name;
     }
 
