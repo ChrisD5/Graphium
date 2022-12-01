@@ -15,10 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -81,6 +78,36 @@ public class AdminController {
         return "redirect:/admin/e";
     }
 
+    @PostMapping("/e/disable/{id}")
+    public String adminDisableEmployee(RedirectAttributes redirectAttributes, @PathVariable long id) {
+        User employee = userRepository.findById(id);
+        if (employee == null || !employee.isEmployee()) {
+            redirectAttributes.addFlashAttribute("delstatus", "error");
+            redirectAttributes.addFlashAttribute("delmessage", "This employee does not exist");
+            return "redirect:/admin/e";
+        }
+        employee.setDisabled(true);
+        userRepository.save(employee);
+        redirectAttributes.addFlashAttribute("delstatus", "success");
+        redirectAttributes.addFlashAttribute("delmessage", String.format("The employee %s has been disabled", employee.getName()));
+        return "redirect:/admin/e";
+    }
+
+    @PostMapping("/e/enable/{id}")
+    public String adminEnableEmployee(RedirectAttributes redirectAttributes, @PathVariable long id) {
+        User employee = userRepository.findById(id);
+        if (employee == null || !employee.isEmployee()) {
+            redirectAttributes.addFlashAttribute("delstatus", "error");
+            redirectAttributes.addFlashAttribute("delmessage", "This employee does not exist");
+            return "redirect:/admin/e";
+        }
+        employee.setDisabled(false);
+        userRepository.save(employee);
+        redirectAttributes.addFlashAttribute("delstatus", "success");
+        redirectAttributes.addFlashAttribute("delmessage", String.format("The employee %s has been re-enabled", employee.getName()));
+        return "redirect:/admin/e";
+    }
+
     @GetMapping("/s")
     public String adminSupervisorsController(Model model) {
         if (model.getAttribute("supervisor") == null) {
@@ -89,7 +116,7 @@ public class AdminController {
         Collection<SupervisorJoinTeam> supervisorJoinTeams = new ArrayList<>();
         Collection<User> supervisors = userRepository.findBySupervisorIsTrue();
         for (User u : supervisors) {
-            SupervisorJoinTeam supervisorJoinTeam = new SupervisorJoinTeam(u.getId(), u.getName());
+            SupervisorJoinTeam supervisorJoinTeam = new SupervisorJoinTeam(u.getId(), u.getName(), u.isDisabled());
             Team findTeam = teamRepository.findBySupervisor(u);
             if (findTeam != null) {
                 supervisorJoinTeam.setTeamname(findTeam.getName());
@@ -119,6 +146,36 @@ public class AdminController {
         return "redirect:/admin/s";
     }
 
+    @PostMapping("/s/disable/{id}")
+    public String adminDisableSupervisor(RedirectAttributes redirectAttributes, @PathVariable long id) {
+        User supervisor = userRepository.findById(id);
+        if (supervisor == null || !supervisor.isSupervisor()) {
+            redirectAttributes.addFlashAttribute("delstatus", "error");
+            redirectAttributes.addFlashAttribute("delmessage", "This supervisor does not exist");
+            return "redirect:/admin/s";
+        }
+        supervisor.setDisabled(true);
+        userRepository.save(supervisor);
+        redirectAttributes.addFlashAttribute("delstatus", "success");
+        redirectAttributes.addFlashAttribute("delmessage", String.format("The supervisor %s has been disabled", supervisor.getName()));
+        return "redirect:/admin/s";
+    }
+
+    @PostMapping("/s/enable/{id}")
+    public String adminEnableSupervisor(RedirectAttributes redirectAttributes, @PathVariable long id) {
+        User supervisor = userRepository.findById(id);
+        if (supervisor == null || !supervisor.isSupervisor()) {
+            redirectAttributes.addFlashAttribute("delstatus", "error");
+            redirectAttributes.addFlashAttribute("delmessage", "This supervisor does not exist");
+            return "redirect:/admin/s";
+        }
+        supervisor.setDisabled(false);
+        userRepository.save(supervisor);
+        redirectAttributes.addFlashAttribute("delstatus", "success");
+        redirectAttributes.addFlashAttribute("delmessage", String.format("The supervisor %s has been re-enabled", supervisor.getName()));
+        return "redirect:/admin/s";
+    }
+
     @GetMapping("/team")
     public String adminTeamsController(Model model) {
         if (model.getAttribute("team") == null) {
@@ -132,7 +189,7 @@ public class AdminController {
         for (User u : supervisors) {
             Team findTeam = teamRepository.findBySupervisor(u);
             if (findTeam == null) {
-                unassignedSupervisors.add(new SupervisorJoinTeam(u.getId(), u.getName()));
+                unassignedSupervisors.add(new SupervisorJoinTeam(u.getId(), u.getName(), u.isDisabled()));
             }
         }
         List<Team> teams = teamRepository.findAll();

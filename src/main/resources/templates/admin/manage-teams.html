@@ -21,7 +21,7 @@
                     </label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
                            id="name" type="text" placeholder="Team Name" th:field="*{name}" name="name"
-                           th:value="${team?.name}">
+                           th:value="${team?.name}" required>
                 </div>
             </div>
             <div class="my-5 flex items-center justify-between">

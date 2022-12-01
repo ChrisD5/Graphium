@@ -17,14 +17,14 @@
                         Full Name
                     </label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                           id="name" type="text" placeholder="Full Name" th:field="*{name}" name="name" th:value="${supervisor?.name}">
+                           id="name" type="text" placeholder="Full Name" th:field="*{name}" name="name" th:value="${supervisor?.name}" required>
                 </div>
                 <div class="mr-10 w-1/2">
                     <label class="block text-nord-4 text-md font-bold mb-2" for="email">
                         Email
                     </label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                           th:field="*{email}" id="email" type="text" placeholder="Email" name="email" th:value="${supervisor?.email}">
+                           th:field="*{email}" id="email" type="email" placeholder="Email" name="email" th:value="${supervisor?.email}" required>
                 </div>
             </div>
             <div class="my-5 flex">
@@ -33,7 +33,7 @@
                         Phone Number
                     </label>
                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                           th:field="*{phone}" id="phone" type="tel" placeholder="Start with +44" pattern="[0-9+]{3}[0-9]{10}" th:value="${supervisor?.phone}">
+                           th:field="*{phone}" id="phone" type="tel" placeholder="Start with +44" pattern="[0-9+]{3}[0-9]{10}" th:value="${supervisor?.phone}" required>
                 </div>
                 <div class="mr-10 w-1/2">
 
@@ -49,6 +49,10 @@
     </div>
     <div class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Supervisors List</label>
+        <p th:classappend="${delstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+           th:if="${delstatus}" th:text="${delstatus == 'error' ? 'Error: ' + delmessage : 'Success: ' + delmessage}">
+            Error Disabling Supervisor
+        </p>
         <table class="border-collapse w-full">
             <thead>
             <tr>
@@ -62,7 +66,7 @@
             <tr th:each="sup: ${supervisors}" class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Supervisor Name</span>
-                    <span th:text="${sup.name}"></span>
+                    <span th:text="${sup.name + (sup.disabled ? ' (Disabled)' : '')}"></span>
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
@@ -74,7 +78,10 @@
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
-                    <a class="cursor-pointer" href="#">Remove</a>
+                    <form th:action="@{'/admin/s/{ble}/{id}'(ble=${sup.disabled ? 'enable' : 'disable'},id=${sup.id})}" method="post">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="cursor-pointer" th:text="${sup.disabled ? 'Enable' : 'Disable'}">Disable</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

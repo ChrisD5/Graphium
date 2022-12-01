@@ -10,11 +10,13 @@ import lombok.Setter;
 public class SupervisorJoinTeam {
 
     private long id;
+    private boolean disabled;
     private String name;
     private String teamname;
 
-    public SupervisorJoinTeam(long id, String name) {
+    public SupervisorJoinTeam(long id, String name, boolean disabled) {
         this.id = id;
         this.name = name;
+        this.disabled = disabled;
     }
 }
