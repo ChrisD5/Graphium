@@ -7,7 +7,7 @@ import ai.graphium.checkin.enums.UserType;
 import ai.graphium.checkin.forms.*;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,18 +19,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/admin")
 @Secured("ROLE_ADMIN")
 public class AdminController {
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private TeamRepository teamRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("")
@@ -269,7 +265,7 @@ public class AdminController {
     }
 
     @PostMapping("/team/delete/{id}")
-   public String adminDeleteTeam(RedirectAttributes redirectAttributes, @PathVariable long id) {
+    public String adminDeleteTeam(RedirectAttributes redirectAttributes, @PathVariable long id) {
         Team team = teamRepository.findById(id);
         if (team == null) {
             redirectAttributes.addFlashAttribute("delstatus", "error");

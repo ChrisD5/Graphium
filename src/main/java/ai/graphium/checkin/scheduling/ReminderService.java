@@ -1,12 +1,10 @@
 package ai.graphium.checkin.scheduling;
 
-import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.enums.AlertType;
 import ai.graphium.checkin.enums.AlertVisibility;
-import ai.graphium.checkin.repos.UserRepository;
 import ai.graphium.checkin.services.AlertService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,13 +14,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.JoinType;
 import java.util.concurrent.TimeUnit;
 
+@AllArgsConstructor
 @Service
 public class ReminderService {
 
-    @Autowired
     EntityManager em;
-
-    @Autowired
     private AlertService alertService;
 
     @Async

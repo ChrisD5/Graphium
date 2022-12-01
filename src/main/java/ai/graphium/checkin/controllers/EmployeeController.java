@@ -14,7 +14,6 @@ import ai.graphium.checkin.services.AlertService;
 import ai.graphium.checkin.services.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -33,6 +32,9 @@ public class EmployeeController {
 
     private UserRepository userRepository;
     private EmployeeService employeeService;
+    private NoteRepository noteRepository;
+    private CheckInRepository checkInRepository;
+    private AlertService alertService;
 
     @GetMapping("")
     public String employeeHomeController(Model model, Authentication authentication) {
@@ -43,15 +45,6 @@ public class EmployeeController {
 
         return "employee/index";
     }
-
-    @Autowired
-    private NoteRepository noteRepository;
-
-    @Autowired
-    private CheckInRepository checkInRepository;
-
-    @Autowired
-    private AlertService alertService;
 
     @PostMapping("/checkin")
     public String checkin(CheckinSubmission checkinSubmission, Authentication authentication, RedirectAttributes atts) throws Exception {
