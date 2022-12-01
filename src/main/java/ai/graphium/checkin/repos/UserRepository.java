@@ -27,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     Collection<User> findByTeamIdAndSupervisorIsFalse(long teamId);
 
     Collection<User> findFirst10BySupervisorIsTrue();
+
 }
