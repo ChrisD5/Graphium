@@ -14,7 +14,7 @@
 
             </div>
             <div class="relative">
-                <img src="https://media-exp1.licdn.com/dms/image/D5603AQF2trvz5Sb03A/profile-displayphoto-shrink_800_800/0/1664486525855?e=2147483647&v=beta&t=NRKsuRu7q6R4bAxXlB1p3GjMyymDHBRrnJYle9375eM"
+                <img th:src="${image != null ? 'data:charset=utf-8;base64,' + image : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'}"
                      class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-slate-600"
                      alt="Profile Picture"/>
 
@@ -36,7 +36,7 @@
 
             <p class="mt-4 text-nord-6">Low-Level Frontend Developer</p>
             <p class="mt-4 text-nord-6" th:text="${user.phone}"></p>
-            <p class="mt-4 text-nord-6">SanilJalan12@iheartcomputers.com</p>
+            <p class="mt-4 text-nord-6" th:text="${user?.team?.name}"></p>
 
         </div>
 

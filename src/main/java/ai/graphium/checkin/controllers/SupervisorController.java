@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 
@@ -63,6 +64,7 @@ public class SupervisorController {
             return "redirect:/s/employees";
         }
         model.addAttribute("user", user);
+        model.addAttribute("image", user.getImage() != null ? Base64.getEncoder().encodeToString(user.getImage()) : null);
         return "supervisor/profile";
 
     }

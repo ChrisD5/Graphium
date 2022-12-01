@@ -14,8 +14,8 @@
 
             </div>
             <div class="relative">
-                <img src="https://media-exp1.licdn.com/dms/image/D5603AQF2trvz5Sb03A/profile-displayphoto-shrink_800_800/0/1664486525855?e=2147483647&v=beta&t=NRKsuRu7q6R4bAxXlB1p3GjMyymDHBRrnJYle9375eM"
-                     class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-#ECEFF4"
+                <img th:src="${image != null ? 'data:charset=utf-8;base64,' + image : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'}"
+                     class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-slate-600"
                      alt="Profile Picture"/>
 
             </div>
@@ -32,7 +32,7 @@
             <h1 class="text-3xl font-xs text-nord-6">Update Details<span
                     class="font-light text-gray-500"></span>
             </h1>
-            <form action="#" th:action="@{/e/profile/edit}" th:object="${user}" method="post">
+            <form action="#" th:action="@{/e/profile/edit}" th:object="${user}" method="post" enctype="multipart/form-data">
                 <p class="mt-4 text-gray-500">Full-Name: <input type="text" pattern="[a-zA-Z ]+" th:field="*{name}"
                                                                 th:value="${user.name}"
                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
@@ -41,9 +41,12 @@
                                                                  th:field="*{phone}" th:value="${user.phone}"
                                                                  class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
                 </p>
+                <p class="mt-4 text-gray-500">Profile Picture: <input type="file" name="image" accept="image/*"
+                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
+                </p>
 
                 <p class="mt-4 text-nord-6"><input type="submit" value="Submit"/> | <input type="reset"
-                                                                                             value="Reset"/></p>
+                                                                                           value="Reset"/></p>
             </form>
 
         </div>

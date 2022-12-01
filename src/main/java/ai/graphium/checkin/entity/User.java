@@ -60,6 +60,9 @@ public class User {
     @Column(nullable = false)
     private String phone;
 
+    @Column(length = 67000)
+    private byte[] image;
+
     @Column(nullable = false)
     private Date created;
 
