@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Comparator;
+import javax.persistence.EntityManager;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
 @Controller
@@ -26,9 +26,34 @@ public class SupervisorController {
 
     private UserRepository userRepository;
     private TeamRepository teamRepository;
+    private EntityManager em;
 
     @GetMapping("")
-    public String supervisorHomeController() {
+    public String supervisorHomeController(Model model, Authentication authentication) {
+        Team team = teamRepository.findBySupervisorEmail(authentication.getName());
+        List<User> employees = userRepository.findAllByTeamId(team.getId());
+        Map<User, List<CheckIn>> map = new TreeMap<>(Comparator.comparing(User::getName));
+        for (User emp : employees) {
+            var cb = em.getCriteriaBuilder();
+            var cq = cb.createQuery(CheckIn.class);
+            var root = cq.from(CheckIn.class);
+            cq.select(root);
+            {
+                var sq = cq.subquery(Long.class);
+                var userRoot = sq.from(User.class);
+                var checkInRoot = userRoot.join("checkIns");
+                sq.select(checkInRoot.get("id"));
+                sq.where(cb.equal(userRoot.get("id"), emp.getId()));
+
+                cq.where(cb.and(
+                        root.get("id").in(sq),
+                        cb.gt(root.get("time"), System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))
+                ));
+            }
+            cq.orderBy(cb.desc(root.get("time")));
+            map.put(emp, em.createQuery(cq).getResultList());
+        }
+//        model.addAttribute("supervisor", team.getSupervisor().getName());
         return "supervisor/index";
     }
 

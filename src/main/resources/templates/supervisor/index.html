@@ -1,13 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header('Home | Supervisor Portal')" />
-<body>
+<body class="bg-nord-0">
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+    <div class="flex flex-col gap-4 mx-8 my-10 content-center">
+<!--        <label class="text-nord-4 font-semibold tracking-wider text-lg" th:text="${'Welcome to your dashboard, ' + supervisor.name}"></label>-->
+        <div class="content-center shadow-lg rounded-lg overflow-hidden bg-nord-1 w-2/3">
+            <canvas class="p-10" id="chartLine"></canvas>
+        </div>
+    </div>
 </div>
 
 </body>
 
-<footer th:replace="fragments/footer :: footer"></footer>
+<footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const labels = ["24/11", "25/11", "26/11", "27/11", "28/11", "29/11", "30/11"];
+        const data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Sanil Jalan",
+                    data: [0,1,2,3,4,5,10],
+                },
+                {
+                    label: "Chris Dixon",
+                    data: [5,2,1,6,3,6,3],
+                }
+            ],
+        };
+
+        const configLineChart = {
+            type: "line",
+            data,
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: {
+                            color: "#D8DEE9"
+                        }
+                    },
+                    title: {
+                        display: true,
+                        color: "#D8DEE9",
+                        text: "Check-In scores of your employees (past 7 weeks)"
+                    }
+                }
+            },
+        };
+
+        Chart.defaults.color = '#D8DEE9';
+        Chart.defaults.font.size = 18;
+        Chart.defaults.backgroundColor = "#D8DEE9";
+        Chart.defaults.borderColor = "#D8DEE9";
+
+        var chartLine = new Chart(
+            document.getElementById("chartLine"),
+            configLineChart
+        );
+    </script>
+</footer>
+
+<footer th:replace="fragments/footer :: footer">
+</footer>
 </html>
