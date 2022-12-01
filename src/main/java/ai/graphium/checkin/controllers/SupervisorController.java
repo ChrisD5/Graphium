@@ -4,7 +4,7 @@ import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,17 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Base64;
 import java.util.Collection;
-import java.util.List;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/s")
 @Secured("ROLE_SUPERVISOR")
 public class SupervisorController {
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private TeamRepository teamRepository;
 
     @GetMapping("")

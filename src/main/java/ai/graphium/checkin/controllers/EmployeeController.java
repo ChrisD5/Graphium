@@ -12,9 +12,9 @@ import ai.graphium.checkin.repos.CheckInRepository;
 import ai.graphium.checkin.repos.NoteRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import ai.graphium.checkin.services.AlertService;
-import ai.graphium.checkin.services.MailerService;
+import ai.graphium.checkin.services.EmployeeService;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -29,27 +29,32 @@ import java.util.Base64;
 @Controller
 @RequestMapping("/e")
 @Secured("ROLE_EMPLOYEE")
+@AllArgsConstructor
 public class EmployeeController {
 
-    @Autowired
     private UserRepository userRepository;
+    private EmployeeService employeeService;
+    private NoteRepository noteRepository;
+    private CheckInRepository checkInRepository;
+    private AlertService alertService;
 
     @GetMapping("")
-    public String employeeHomeController() {
+    public String employeeHomeController(Model model, Authentication authentication) {
+
+        boolean hasCheckedInToday = employeeService.hasCheckedInToday(authentication.getName());
+
+        model.addAttribute("checkedIn", hasCheckedInToday);
+
         return "employee/index";
     }
 
-    @Autowired
-    private NoteRepository noteRepository;
-
-    @Autowired
-    private CheckInRepository checkInRepository;
-
-    @Autowired
-    private AlertService alertService;
-
     @PostMapping("/checkin")
     public String checkin(CheckinSubmission checkinSubmission, Authentication authentication, RedirectAttributes atts) throws Exception {
+
+        if (employeeService.hasCheckedInToday(authentication.getName())) {
+            atts.addFlashAttribute("error", "You have already checked in today.");
+            return "redirect:/e";
+        }
 
         String ratingStr = checkinSubmission.getRating();
         int rating;

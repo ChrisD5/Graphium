@@ -5,19 +5,17 @@ import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.enums.AlertType;
 import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.repos.AlertRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 
+@AllArgsConstructor
 @Service
 public class AlertService {
 
-    @Autowired
     private MailerService mailerService;
-
-    @Autowired
     private AlertRepository alertRepository;
 
     @Async
@@ -31,7 +29,8 @@ public class AlertService {
         }
 
         // Alert supervisor only if the alert has a medium or higher type
-        if (type.compareTo(AlertType.MEDIUM) >= 0 && (visibility == AlertVisibility.SUPERVISOR || visibility == AlertVisibility.ALL)) {
+        if (type.compareTo(AlertType.MEDIUM) >= 0
+                && (visibility == AlertVisibility.SUPERVISOR || visibility == AlertVisibility.ALL)) {
             mailerService.sendMail(supervisor.getEmail(), title, supervisorMessage);
         }
     }

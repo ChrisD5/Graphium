@@ -1,7 +1,6 @@
 package ai.graphium.checkin.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import lombok.AllArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -12,12 +11,11 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+@AllArgsConstructor
 @Service
 public class MailerService {
 
-    @Autowired
     private JavaMailSender emailSender;
-    @Autowired
     private SpringTemplateEngine templateEngine;
 
     @Async
