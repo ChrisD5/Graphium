@@ -1,11 +1,5 @@
 package ai.graphium.checkin.config.security;
 
-import ai.graphium.checkin.entity.Team;
-import ai.graphium.checkin.entity.User;
-import ai.graphium.checkin.enums.UserType;
-import ai.graphium.checkin.properties.AuthProperties;
-import ai.graphium.checkin.repos.TeamRepository;
-import ai.graphium.checkin.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,58 +28,7 @@ public class SecurityConfig {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth,
                                 UserDetailsService userDetailsService,
-                                PasswordEncoder passwordEncoder,
-                                UserRepository userRepository,
-                                TeamRepository teamRepository,
-                                AuthProperties authProperties) throws Exception {
-
-        // adding default admin user
-        var admin = userRepository
-                .findByEmail(DEFAULT_USERNAME);
-        if (admin == null) {
-            admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN, "Admin", "+441234567890");
-            userRepository.save(admin);
-        }
-        if (authProperties.isGenerateDefaultUsers()) {
-            var supervisor = userRepository
-                    .findByEmail("supervisor@graphium.ai");
-            if (supervisor == null) {
-                supervisor = new User("supervisor@graphium.ai", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
-                supervisor.setEmployee(true);
-                userRepository.save(supervisor);
-            }
-            var employee = userRepository
-                    .findByEmail("employee@graphium.ai");
-            if (employee == null) {
-                employee = new User("employee@graphium.ai", passwordEncoder.encode("employee"), UserType.EMPLOYEE, "Employee", "+441234567890");
-                userRepository.save(employee);
-            }
-            var emailEmployee = userRepository
-                    .findByEmail("kavin@kavin.rocks");
-            if (emailEmployee == null) {
-                emailEmployee = new User("kavin@kavin.rocks", passwordEncoder.encode("kavin"), UserType.EMPLOYEE, "Kavin", "+441234567890");
-                userRepository.save(emailEmployee);
-            }
-            var emailSupervisor = userRepository
-                    .findByEmail("supervisor@kavin.rocks");
-            if (emailSupervisor == null) {
-                emailSupervisor = new User("supervisor@kavin.rocks", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Email Supervisor", "+441234567890");
-                userRepository.save(emailSupervisor);
-            }
-            var teams = teamRepository
-                    .findAll();
-            if (teams.size() < 2) {
-                var team1 = new Team(supervisor, "Dev Ops");
-                employee.setTeam(team1);
-                var team2 = new Team(emailSupervisor, "Flutter Developer");
-                emailEmployee.setTeam(team2);
-                teamRepository.save(team1);
-                teamRepository.save(team2);
-                userRepository.save(employee);
-                userRepository.save(emailEmployee);
-            }
-        }
-
+                                PasswordEncoder passwordEncoder) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder);
     }

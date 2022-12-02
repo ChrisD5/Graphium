@@ -50,13 +50,17 @@ public class Alert {
     private long created;
 
     public Alert(User target, User supervisor, String title, String targetMessage, String supervisorMessage, AlertType type, AlertVisibility visibility) {
+        this(target, supervisor, title, targetMessage, supervisorMessage, System.currentTimeMillis(), type, visibility);
+    }
+
+    public Alert(User target, User supervisor, String title, String targetMessage, String supervisorMessage, long created, AlertType type, AlertVisibility visibility) {
         this.target = target;
         this.supervisor = supervisor;
         this.title = title;
         this.targetMessage = targetMessage;
         this.supervisorMessage = supervisorMessage;
+        this.created = created;
         this.type = type;
         this.visibility = visibility;
-        this.created = System.currentTimeMillis();
     }
 }
