@@ -11,6 +11,39 @@
         <div class="shadow-lg rounded-lg overflow-hidden bg-nord-1 w-2/3 self-center">
             <canvas class="p-10" id="chartLine"></canvas>
         </div>
+        <div class="flex items-center justify-center pt-8">
+            <div class="text-center container">
+                <h2 class="text-nord-4 text-xl" th:if="${noUnreadAlerts}">No unread alerts</h2>
+                <h2 class="text-nord-4 text-xl" th:text="${unreadCount}  + ' Unread alerts'"
+                    th:unless="${noUnreadAlerts}"></h2>
+                <div th:each="alert : ${alerts}">
+                    <div class="flex justify-center my-2">
+                        <div class="flex flex-col rounded-lg shadow-lg p-4"
+                             th:classappend="${alert.readBySupervisor ? 'bg-nord-1' : 'bg-nord-3'}">
+                            <div class="flex justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-nord-4 font-bold text-xl" th:text="${alert.title}"></span>
+                                    <span class="text-nord-5 text-sm" th:text="${alert.supervisorMessage}"></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-nord-5 text-sm" th:text="${#dates.format(alert.created)}"></span>
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <form th:action="@{/s/alert/read}" th:method="post"
+                                      th:unless="${alert.readBySupervisor}">
+                                    <input th:name="id" th:value="${alert.id}" type="hidden">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="submit">
+                                        Mark as read
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

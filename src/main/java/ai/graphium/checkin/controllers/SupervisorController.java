@@ -1,8 +1,10 @@
 package ai.graphium.checkin.controllers;
 
+import ai.graphium.checkin.entity.Alert;
 import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.repos.AlertRepository;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,9 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import java.util.*;
@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Secured("ROLE_SUPERVISOR")
 public class SupervisorController {
 
+    private final AlertRepository alertRepository;
     private UserRepository userRepository;
     private TeamRepository teamRepository;
     private EntityManager em;
@@ -62,9 +63,54 @@ public class SupervisorController {
             cq.orderBy(cb.desc(root.get("time")));
             map.put(emp.getName(), em.createQuery(cq).getResultList());
         }
+        List<Alert> alerts;
+        {
+            var cb = em.getCriteriaBuilder();
+            var cq = cb.createQuery(Alert.class);
+            var root = cq.from(Alert.class);
+            cq.select(root);
+            cq.where(cb.equal(root.get("supervisor"), team.getSupervisor()));
+            cq.orderBy(cb.desc(root.get("created")));
+            alerts = em.createQuery(cq).getResultList();
+        }
+        boolean noUnreadAlerts = alerts.stream().allMatch(Alert::isReadBySupervisor);
+        int unreadCount = (int) alerts.stream().filter(alert -> !alert.isReadBySupervisor()).count();
+
         model.addAttribute("supervisor", team.getSupervisor());
         model.addAttribute("employees", objectMapper.writeValueAsString(map));
+        model.addAttribute("noUnreadAlerts", noUnreadAlerts);
+        model.addAttribute("unreadCount", unreadCount);
+        model.addAttribute("alerts", alerts);
         return "supervisor/index";
+    }
+
+    @PostMapping("alert/read")
+    public String readAlert(@RequestParam("id") long id, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+
+        var alertOptional = alertRepository.findById(id);
+
+        if (alertOptional.isEmpty()) {
+            return "redirect:/s";
+        }
+
+        var alert = alertOptional.get();
+
+        if (alert.getSupervisor().getId() != user.getId()) {
+            return "redirect:/s";
+        }
+
+        alert.setReadBySupervisor(true);
+        alertRepository.save(alert);
+
+        return "redirect:/s";
+    }
+
+    @GetMapping("/team/{teamName}")
+    public String supervisorTeamController(@PathVariable("teamName") String teamName) {
+        // Ensure appropriate security checks are done here to only allow assigned supervisor access
+        return "supervisor/team";
     }
 
     @GetMapping("/settings")

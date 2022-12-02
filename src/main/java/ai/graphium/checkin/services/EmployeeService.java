@@ -3,8 +3,6 @@ package ai.graphium.checkin.services;
 import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

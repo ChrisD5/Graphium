@@ -9,6 +9,7 @@ import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -68,5 +69,6 @@ public class User {
         this.name = name;
         this.phone = phone;
         this.created = new Date(Calendar.getInstance().getTime().getTime());
+        this.checkIns = new HashSet<>();
     }
 }
