@@ -30,9 +30,15 @@ public class SupervisorController {
 
     @GetMapping("")
     public String supervisorHomeController(Model model, Authentication authentication) {
+        Map<String, List<CheckIn>> map = new TreeMap<>();
         Team team = teamRepository.findBySupervisorEmail(authentication.getName());
+        if (team == null) {
+            User supervisor = userRepository.findByEmail(authentication.getName());
+            model.addAttribute("supervisor", supervisor);
+            model.addAttribute("employees", map);
+            return "supervisor/index";
+        }
         List<User> employees = userRepository.findAllByTeamId(team.getId());
-        Map<User, List<CheckIn>> map = new TreeMap<>(Comparator.comparing(User::getName));
         for (User emp : employees) {
             var cb = em.getCriteriaBuilder();
             var cq = cb.createQuery(CheckIn.class);
@@ -51,9 +57,11 @@ public class SupervisorController {
                 ));
             }
             cq.orderBy(cb.desc(root.get("time")));
-            map.put(emp, em.createQuery(cq).getResultList());
+            map.put(emp.getName(), em.createQuery(cq).getResultList());
         }
-//        model.addAttribute("supervisor", team.getSupervisor().getName());
+        JSONObject jsonMap = new JSONObject(map);
+        model.addAttribute("supervisor", team.getSupervisor());
+        model.addAttribute("employees", jsonMap);
         return "supervisor/index";
     }
 
