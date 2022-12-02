@@ -102,7 +102,7 @@ public class EmployeeController {
             alertService.createAlert(
                     "Low check-in rating",
                     "Are you okay? Your check-in rating was " + checkIn.getRating() + " out of 10 today. Would you like to schedule a meeting with your supervisor?",
-                    "Your employee " + user.getName() + " has checked-in with a rating of " + checkIn.getRating() + " out of 10 today.<br>Would it help to schedule an meeting with them?",
+                    "Your employee " + user.getName() + " has checked-in with a rating of " + checkIn.getRating() + " out of 10 today. Would it help to schedule an meeting with them?",
                     AlertType.MEDIUM, AlertVisibility.ALL,
                     user, user.getTeam().getSupervisor());
 
