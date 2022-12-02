@@ -3,8 +3,219 @@
 <head th:replace="fragments/header :: header('Home | Employee Check-In Portal')"/>
 <body class="bg-nord-0">
 
-<div class="container mx-auto">
+<div un-clock class="container mx-auto">
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
+    <div class="flex flex-col gap-4 mx-8 my-7" th:unless="${checkedIn}">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Employee Home</label>
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/e/checkin}">
+            <!-- Flash message for error -->
+            <div class="flex justify-center" th:if="${error}">
+                <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
+
+            <!-- Flash message for success -->
+            <div class="flex justify-center" th:if="${message}">
+                <div class="bg-nord-14 rounded m-2 p-2 text-nord-0 text-s italic text-center w-1/2">
+                    <span th:text="${message}"></span>
+                </div>
+            </div>
+            <h1 class="text-nord-4 text-center text-3xl">Check-In Portal</h1>
+            <div class="mt-4">
+                <label class="block text-nord-4 text-center text-md font-bold mb-2">
+                    Rating
+                </label>
+                <!-- Rating buttons from 1-10 -->
+                <div>
+                    <div class="flex gap-2 justify-center flex-wrap p-1">
+                        <input name="rating" type="hidden">
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="1">
+                            <!-- emoji for rating -->
+                            <!-- Weary Face -->
+                            &#x1F629;
+                            <br>
+                            1
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="2">
+                            <!-- emoji for rating -->
+                            <!-- Disappointed Face -->
+                            &#x1F61E;
+                            <br>
+                            2
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="3">
+                            <!-- emoji for rating -->
+                            <!-- Neutral Face -->
+                            &#x1F610;
+                            <br>
+                            3
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="4">
+                            <!-- emoji for rating -->
+                            <!-- Slightly Smiling Face -->
+                            &#x1F642;
+                            <br>
+                            4
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="5">
+                            <!-- emoji for rating -->
+                            <!-- Smiling Face with Smiling Eyes -->
+                            &#x1F60A;
+                            <br>
+                            5
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="6">
+                            <!-- emoji for rating -->
+                            <!-- Smiling Face with Halo -->
+                            &#x1F607;
+                            <br>
+                            6
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="7">
+                            <!-- emoji for rating -->
+                            <!-- Grinning Face with Big Eyes -->
+                            &#128516;
+                            <br>
+                            7
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="8">
+                            <!-- emoji for rating -->
+                            <!-- Smiling Face with Sunglasses -->
+                            &#x1F60E;
+                            <br>
+                            8
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="9">
+                            <!-- emoji for rating -->
+                            <!-- Smiling Face with Heart-Eyes -->
+                            &#x1F60D;
+                            <br>
+                            9
+                        </button>
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
+                                name="rating"
+                                type="button" value="10">
+                            <!-- emoji for rating -->
+                            <!-- Star-Struck -->
+                            &#x1F929;
+                            <br>
+                            10
+                        </button>
+                    </div>
+
+                    <!-- Text area where they can give a reason why they gave such a rating. -->
+                    <div class="mt-4">
+                        <label class="block text-nord-4 text-center text-md font-bold mb-2">
+                            Comment
+                        </label>
+                        <div class="flex justify-center">
+                        <textarea
+                                class="shadow appearance-none border rounded md:w-1/3 h-24 justify-center py-2 px-3 text-nord-0 bg-nord-5 leading-tight focus:outline-none focus:shadow-outline"
+                                name="comment" placeholder="Optional comment"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="flex justify-center mt-4">
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="submit">
+                            Check-In
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="flex flex-col gap-4 mx-8 my-7" th:if="${checkedIn}">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Employee Home</label>
+        <div class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4 text-center justify-center">
+
+            <!-- Flash message for error -->
+            <div class="flex justify-center" th:if="${error}">
+                <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
+
+            <!-- Flash message for success -->
+            <div class="flex justify-center" th:if="${message}">
+                <div class="bg-nord-14 rounded m-2 p-2 text-nord-0 text-s italic text-center w-1/2">
+                    <span th:text="${message}"></span>
+                </div>
+            </div>
+
+            <div class="flex justify-center m-2">
+                <p class="text-nord-4 text-3xl">You have already checked in for today.</p>
+            </div>
+            <div class="flex justify-center m-2">
+                <p class="text-nord-5 text-md">Come back tomorrow, to check in again.</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col gap-4 mx-8 my-7">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg"
+               th:text="${!noUnreadAlerts ? 'Alerts ('+unreadCount+' unread)' : 'Alerts'}">Alerts</label>
+        <div class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div th:classappend="${alert.readByTarget ? 'bg-nord-3' : 'bg-nord-0'}" class="relative border-l-4 border-orange-500 text-nord-4 p-4 rounded" role="alert"
+                 th:each="alert : ${alerts}">
+                <p class="text-xs text-nord-6" th:text="${#dates.format(alert.created)}"></p>
+                <p class="font-bold" th:text="${alert.title}"></p>
+                <p th:text="${alert.targetMessage}"></p>
+                <form th:action="@{/e/alert/read}" th:method="post" th:unless="${alert.readByTarget}">
+                    <label>
+                        <input class="hidden" type="submit" name="id" th:value="${alert.id}">
+                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                        <svg class="hover:bg-nord-2 cursor-pointer fill-current h-6 w-6 bg-nord-0 text-nord-4 rounded-lg"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title>
+                            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                        </span>
+                    </label>
+                </form>
+            </div>
+            <!--            <div class="flex justify-center my-2">-->
+            <!--                <div class="flex flex-col rounded-lg shadow-lg p-4"-->
+            <!--                     th:classappend="${alert.readByTarget ? 'bg-nord-0' : 'bg-nord-2'}">-->
+            <!--                    <div class="flex justify-between">-->
+            <!--                        <div class="flex flex-col">-->
+            <!--                            <span class="text-nord-4 font-bold text-xl" th:text="${alert.title}"></span>-->
+            <!--                            <span class="text-nord-5 text-sm" th:text="${alert.targetMessage}"></span>-->
+            <!--                        </div>-->
+            <!--                        <div class="flex flex-col">-->
+            <!--                            <span class="text-nord-5 text-sm" th:text="${#dates.format(alert.created)}"></span>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                    <div class="flex justify-end">-->
+            <!--                        <form th:action="@{/e/alert/read}" th:method="post" th:unless="${alert.readByTarget}">-->
+            <!--                            <input th:name="id" th:value="${alert.id}" type="hidden">-->
+            <!--                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"-->
+            <!--                                    type="submit">-->
+            <!--                                Mark as read-->
+            <!--                            </button>-->
+            <!--                        </form>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+    </div>
 </div>
 
 <!--
@@ -12,207 +223,6 @@ A portal, where the user can check in a rating from 1-10 of how they're doing.
 They can also optionally add a comment to why they're feeling that way.
 With the nord theme, and Tailwind CSS.
  -->
-<div class="bg-nord-0" un-cloak>
-    <div class="bg-nord-1">
-        <div th:unless="${checkedIn}">
-            <form class="shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/e/checkin}">
-
-                <h1 class="text-nord-4 text-center text-5xl">Check-in Portal</h1>
-
-                <!-- Flash message for error -->
-                <div class="flex justify-center" th:if="${error}">
-                    <div class="h-6 w-auto rounded bg-nord-3 text-nord-11 text-center">
-                        <span th:text="${error}"></span>
-                    </div>
-                </div>
-
-                <!-- Flash message for success -->
-                <div class="flex justify-center" th:if="${message}">
-                    <div class="h-6 w-auto rounded bg-nord-3 text-nord-14 text-center">
-                        <span th:text="${message}"></span>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    <label class="block text-nord-4 text-center text-md font-bold mb-2">
-                        Rating
-                    </label>
-                    <!-- Rating buttons from 1-10 -->
-                    <div>
-                        <div class="flex justify-center">
-                            <input name="rating" type="hidden">
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="1">
-                                <!-- emoji for rating -->
-                                <!-- Weary Face -->
-                                &#x1F629;
-                                <br>
-                                1
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="2">
-                                <!-- emoji for rating -->
-                                <!-- Disappointed Face -->
-                                &#x1F61E;
-                                <br>
-                                2
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="3">
-                                <!-- emoji for rating -->
-                                <!-- Neutral Face -->
-                                &#x1F610;
-                                <br>
-                                3
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="4">
-                                <!-- emoji for rating -->
-                                <!-- Slightly Smiling Face -->
-                                &#x1F642;
-                                <br>
-                                4
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="5">
-                                <!-- emoji for rating -->
-                                <!-- Smiling Face with Smiling Eyes -->
-                                &#x1F60A;
-                                <br>
-                                5
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="6">
-                                <!-- emoji for rating -->
-                                <!-- Smiling Face with Halo -->
-                                &#x1F607;
-                                <br>
-                                6
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="7">
-                                <!-- emoji for rating -->
-                                <!-- Grinning Face with Big Eyes -->
-                                &#128516;
-                                <br>
-                                7
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="8">
-                                <!-- emoji for rating -->
-                                <!-- Smiling Face with Sunglasses -->
-                                &#x1F60E;
-                                <br>
-                                8
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="9">
-                                <!-- emoji for rating -->
-                                <!-- Smiling Face with Heart-Eyes -->
-                                &#x1F60D;
-                                <br>
-                                9
-                            </button>
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    name="rating"
-                                    type="button" value="10">
-                                <!-- emoji for rating -->
-                                <!-- Star-Struck -->
-                                &#x1F929;
-                                <br>
-                                10
-                            </button>
-                        </div>
-
-                        <!-- Text area where they can give a reason why they gave such a rating. -->
-                        <div class="mt-4">
-                            <label class="block text-nord-4 text-center text-md font-bold mb-2">
-                                Comment
-                            </label>
-                            <div class="flex justify-center">
-                        <textarea
-                                class="shadow appearance-none border rounded w-1/3 h-24 justify-center py-2 px-3 text-nord-0 bg-nord-5 leading-tight focus:outline-none focus:shadow-outline"
-                                name="comment" placeholder="Optional comment"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Submit button -->
-                        <div class="flex justify-center mt-4">
-                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                    type="submit">
-                                Submit
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div th:if="${checkedIn}">
-            <div class="text-center justify-center mt-4">
-
-                <!-- Flash message for error -->
-                <div class="flex justify-center" th:if="${error}">
-                    <div class="h-6 w-auto rounded bg-nord-3 text-nord-11 text-center">
-                        <span th:text="${error}"></span>
-                    </div>
-                </div>
-
-                <!-- Flash message for success -->
-                <div class="flex justify-center" th:if="${message}">
-                    <div class="h-6 w-auto rounded bg-nord-3 text-nord-14 text-center">
-                        <span th:text="${message}"></span>
-                    </div>
-                </div>
-
-                <h2 class="text-nord-4 text-4xl">You have already checked in for today.</h2>
-                <br>
-                <h3 class="text-nord-5 text-xl">Come back tomorrow, to check in again.</h3>
-            </div>
-        </div>
-        <div class="flex items-center justify-center pt-8">
-            <div class="text-center container">
-                <h2 class="text-nord-4 text-xl" th:if="${noUnreadAlerts}">No unread alerts</h2>
-                <h2 class="text-nord-4 text-xl" th:text="${unreadCount}  + ' Unread alerts'"
-                    th:unless="${noUnreadAlerts}"></h2>
-                <div th:each="alert : ${alerts}">
-                    <div class="flex justify-center my-2">
-                        <div class="flex flex-col rounded-lg shadow-lg p-4"
-                             th:classappend="${alert.readByTarget ? 'bg-nord-0' : 'bg-nord-2'}">
-                            <div class="flex justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-nord-4 font-bold text-xl" th:text="${alert.title}"></span>
-                                    <span class="text-nord-5 text-sm" th:text="${alert.targetMessage}"></span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-nord-5 text-sm" th:text="${#dates.format(alert.created)}"></span>
-                                </div>
-                            </div>
-                            <div class="flex justify-end">
-                                <form th:action="@{/e/alert/read}" th:method="post" th:unless="${alert.readByTarget}">
-                                    <input th:name="id" th:value="${alert.id}" type="hidden">
-                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                            type="submit">
-                                        Mark as read
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 </body>
 
 <script>

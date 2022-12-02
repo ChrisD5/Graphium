@@ -50,7 +50,7 @@ public class EmployeeController {
         boolean noUnreadAlerts = alerts.stream().allMatch(Alert::isReadByTarget);
         int unreadCount = (int) alerts.stream().filter(alert -> !alert.isReadByTarget()).count();
 
-        model.addAttribute("checkedIn", hasCheckedInToday);
+        model.addAttribute("checkedIn", true);
         model.addAttribute("noUnreadAlerts", noUnreadAlerts);
         model.addAttribute("unreadCount", unreadCount);
         model.addAttribute("alerts", alerts);
