@@ -21,7 +21,6 @@
     <script>
         let str = "[[${employees}]]"
         let respObj = JSON.parse(str.replace(/&quot;/g, '"'));
-        console.log(respObj);
         const data = {
             datasets: []
         };
@@ -37,7 +36,6 @@
                 })
             })
         }
-        console.log(data.datasets);
 
         const configLineChart = {
             type: "line",
