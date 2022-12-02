@@ -6,6 +6,9 @@ import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -28,8 +31,11 @@ public class SupervisorController {
     private TeamRepository teamRepository;
     private EntityManager em;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @GetMapping("")
-    public String supervisorHomeController(Model model, Authentication authentication) {
+    public String supervisorHomeController(Model model, Authentication authentication) throws JsonProcessingException {
         Map<String, List<CheckIn>> map = new TreeMap<>();
         Team team = teamRepository.findBySupervisorEmail(authentication.getName());
         if (team == null) {
@@ -59,9 +65,8 @@ public class SupervisorController {
             cq.orderBy(cb.desc(root.get("time")));
             map.put(emp.getName(), em.createQuery(cq).getResultList());
         }
-        JSONObject jsonMap = new JSONObject(map);
         model.addAttribute("supervisor", team.getSupervisor());
-        model.addAttribute("employees", jsonMap);
+        model.addAttribute("employees", objectMapper.writeValueAsString(map));
         return "supervisor/index";
     }
 
