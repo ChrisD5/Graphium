@@ -12,23 +12,22 @@ A portal, where the user can check in a rating from 1-10 of how they're doing.
 They can also optionally add a comment to why they're feeling that way.
 With the nord theme, and Tailwind CSS.
  -->
-<div un-cloak class="bg-nord-0">
-
+<div class="bg-nord-0" un-cloak>
     <div class="bg-nord-1">
         <div th:unless="${checkedIn}">
-            <form class="shadow-md rounded px-8 pt-6 pb-8 mb-4" th:action="@{/e/checkin}" method="post">
+            <form class="shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/e/checkin}">
 
                 <h1 class="text-nord-4 text-center text-5xl">Check-in Portal</h1>
 
                 <!-- Flash message for error -->
-                <div th:if="${error}" class="flex justify-center">
+                <div class="flex justify-center" th:if="${error}">
                     <div class="h-6 w-auto rounded bg-nord-3 text-nord-11 text-center">
                         <span th:text="${error}"></span>
                     </div>
                 </div>
 
                 <!-- Flash message for success -->
-                <div th:if="${message}" class="flex justify-center">
+                <div class="flex justify-center" th:if="${message}">
                     <div class="h-6 w-auto rounded bg-nord-3 text-nord-14 text-center">
                         <span th:text="${message}"></span>
                     </div>
@@ -41,10 +40,10 @@ With the nord theme, and Tailwind CSS.
                     <!-- Rating buttons from 1-10 -->
                     <div>
                         <div class="flex justify-center">
-                            <input type="hidden" name="rating">
+                            <input name="rating" type="hidden">
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="1">
+                                    name="rating"
+                                    type="button" value="1">
                                 <!-- emoji for rating -->
                                 <!-- Weary Face -->
                                 &#x1F629;
@@ -52,8 +51,8 @@ With the nord theme, and Tailwind CSS.
                                 1
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="2">
+                                    name="rating"
+                                    type="button" value="2">
                                 <!-- emoji for rating -->
                                 <!-- Disappointed Face -->
                                 &#x1F61E;
@@ -61,8 +60,8 @@ With the nord theme, and Tailwind CSS.
                                 2
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="3">
+                                    name="rating"
+                                    type="button" value="3">
                                 <!-- emoji for rating -->
                                 <!-- Neutral Face -->
                                 &#x1F610;
@@ -70,8 +69,8 @@ With the nord theme, and Tailwind CSS.
                                 3
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="4">
+                                    name="rating"
+                                    type="button" value="4">
                                 <!-- emoji for rating -->
                                 <!-- Slightly Smiling Face -->
                                 &#x1F642;
@@ -79,8 +78,8 @@ With the nord theme, and Tailwind CSS.
                                 4
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="5">
+                                    name="rating"
+                                    type="button" value="5">
                                 <!-- emoji for rating -->
                                 <!-- Smiling Face with Smiling Eyes -->
                                 &#x1F60A;
@@ -88,8 +87,8 @@ With the nord theme, and Tailwind CSS.
                                 5
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="6">
+                                    name="rating"
+                                    type="button" value="6">
                                 <!-- emoji for rating -->
                                 <!-- Smiling Face with Halo -->
                                 &#x1F607;
@@ -97,8 +96,8 @@ With the nord theme, and Tailwind CSS.
                                 6
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="7">
+                                    name="rating"
+                                    type="button" value="7">
                                 <!-- emoji for rating -->
                                 <!-- Grinning Face with Big Eyes -->
                                 &#128516;
@@ -106,8 +105,8 @@ With the nord theme, and Tailwind CSS.
                                 7
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="8">
+                                    name="rating"
+                                    type="button" value="8">
                                 <!-- emoji for rating -->
                                 <!-- Smiling Face with Sunglasses -->
                                 &#x1F60E;
@@ -115,8 +114,8 @@ With the nord theme, and Tailwind CSS.
                                 8
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="9">
+                                    name="rating"
+                                    type="button" value="9">
                                 <!-- emoji for rating -->
                                 <!-- Smiling Face with Heart-Eyes -->
                                 &#x1F60D;
@@ -124,8 +123,8 @@ With the nord theme, and Tailwind CSS.
                                 9
                             </button>
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2"
-                                    type="button"
-                                    name="rating" value="10">
+                                    name="rating"
+                                    type="button" value="10">
                                 <!-- emoji for rating -->
                                 <!-- Star-Struck -->
                                 &#x1F929;
@@ -161,14 +160,14 @@ With the nord theme, and Tailwind CSS.
             <div class="text-center justify-center mt-4">
 
                 <!-- Flash message for error -->
-                <div th:if="${error}" class="flex justify-center">
+                <div class="flex justify-center" th:if="${error}">
                     <div class="h-6 w-auto rounded bg-nord-3 text-nord-11 text-center">
                         <span th:text="${error}"></span>
                     </div>
                 </div>
 
                 <!-- Flash message for success -->
-                <div th:if="${message}" class="flex justify-center">
+                <div class="flex justify-center" th:if="${message}">
                     <div class="h-6 w-auto rounded bg-nord-3 text-nord-14 text-center">
                         <span th:text="${message}"></span>
                     </div>
@@ -177,6 +176,38 @@ With the nord theme, and Tailwind CSS.
                 <h2 class="text-nord-4 text-4xl">You have already checked in for today.</h2>
                 <br>
                 <h3 class="text-nord-5 text-xl">Come back tomorrow, to check in again.</h3>
+            </div>
+        </div>
+        <div class="flex items-center justify-center pt-8">
+            <div class="text-center container">
+                <h2 class="text-nord-4 text-xl" th:if="${noUnreadAlerts}">No unread alerts</h2>
+                <h2 class="text-nord-4 text-xl" th:text="${unreadCount}  + ' Unread alerts'"
+                    th:unless="${noUnreadAlerts}"></h2>
+                <div th:each="alert : ${alerts}">
+                    <div class="flex justify-center my-2">
+                        <div class="flex flex-col rounded-lg shadow-lg p-4"
+                             th:classappend="${alert.readByTarget ? 'bg-nord-0' : 'bg-nord-2'}">
+                            <div class="flex justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-nord-4 font-bold text-xl" th:text="${alert.title}"></span>
+                                    <span class="text-nord-5 text-sm" th:text="${alert.targetMessage}"></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-nord-5 text-sm" th:text="${#dates.format(alert.created)}"></span>
+                                </div>
+                            </div>
+                            <div class="flex justify-end">
+                                <form th:action="@{/e/alert/read}" th:method="post" th:unless="${alert.readByTarget}">
+                                    <input th:name="id" th:value="${alert.id}" type="hidden">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            type="submit">
+                                        Mark as read
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

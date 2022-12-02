@@ -1,13 +1,14 @@
 package ai.graphium.checkin.controllers;
 
+import ai.graphium.checkin.entity.Alert;
 import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Note;
-import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.enums.AlertType;
 import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.CheckinSubmission;
 import ai.graphium.checkin.forms.EditEmployeeForm;
+import ai.graphium.checkin.repos.AlertRepository;
 import ai.graphium.checkin.repos.CheckInRepository;
 import ai.graphium.checkin.repos.NoteRepository;
 import ai.graphium.checkin.repos.UserRepository;
@@ -32,6 +33,7 @@ import java.util.Base64;
 @AllArgsConstructor
 public class EmployeeController {
 
+    private final AlertRepository alertRepository;
     private UserRepository userRepository;
     private EmployeeService employeeService;
     private NoteRepository noteRepository;
@@ -42,8 +44,16 @@ public class EmployeeController {
     public String employeeHomeController(Model model, Authentication authentication) {
 
         boolean hasCheckedInToday = employeeService.hasCheckedInToday(authentication.getName());
+        var user = userRepository.findByEmail(authentication.getName());
+
+        var alerts = user.getAlerts();
+        boolean noUnreadAlerts = alerts.stream().allMatch(Alert::isReadByTarget);
+        int unreadCount = (int) alerts.stream().filter(alert -> !alert.isReadByTarget()).count();
 
         model.addAttribute("checkedIn", hasCheckedInToday);
+        model.addAttribute("noUnreadAlerts", noUnreadAlerts);
+        model.addAttribute("unreadCount", unreadCount);
+        model.addAttribute("alerts", alerts);
 
         return "employee/index";
     }
@@ -99,6 +109,29 @@ public class EmployeeController {
         return "redirect:/e";
     }
 
+    @PostMapping("alert/read")
+    public String readAlert(@RequestParam("id") long id, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+
+        var alertOptional = alertRepository.findById(id);
+
+        if (alertOptional.isEmpty()) {
+            return "redirect:/e";
+        }
+
+        var alert = alertOptional.get();
+
+        if (alert.getTarget().getId() != user.getId()) {
+            return "redirect:/e";
+        }
+
+        alert.setReadByTarget(true);
+        alertRepository.save(alert);
+
+        return "redirect:/e";
+    }
+
     @GetMapping("/settings")
     public String employeeSettingsController() {
         return "employee/settings";
@@ -125,8 +158,6 @@ public class EmployeeController {
 
     @PostMapping("/profile/edit")
     public String formSubmit(@ModelAttribute EditEmployeeForm user, Model model, Authentication authentication, @RequestParam("image") MultipartFile file) throws IOException {
-        System.out.println(user.getName());
-        System.out.println(user.getPhone());
         var userLookUp = userRepository.findByEmail(authentication.getName());
         userLookUp.setName(user.getName());
         userLookUp.setPhone(user.getPhone());
@@ -135,6 +166,4 @@ public class EmployeeController {
         return "redirect:/e/profile";
 
     }
-
 }
-
