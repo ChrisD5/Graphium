@@ -1,13 +1,92 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Home | Supervisor Portal')" />
-<body>
+<head th:replace="fragments/header :: header('Home | Supervisor Portal')"/>
+<body class="bg-nord-0">
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg"
+               th:text="${'Welcome to your dashboard, ' + supervisor.name}"></label>
+        <div class="shadow-lg rounded-lg overflow-hidden bg-nord-1 w-2/3 self-center">
+            <canvas class="p-10" id="chartLine"></canvas>
+        </div>
+    </div>
 </div>
 
 </body>
 
-<footer th:replace="fragments/footer :: footer"></footer>
+<footer>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script>
+        let str = "[[${employees}]]"
+        let respObj = JSON.parse(str.replace(/&quot;/g, '"'));
+        const data = {
+            datasets: []
+        };
+        for (const emp in respObj) {
+            let sortedEmp = respObj[emp].sort((a, b) => {
+                return a.time - b.time;
+            });
+            data.datasets.push({
+                label: emp,
+                data: sortedEmp.map((v) => {
+                    let date = new Date(v.time);
+                    return {'x': `${date.getUTCDate()}/${date.getUTCMonth() + 1}`, 'y': v.rating}
+                })
+            })
+        }
+
+        const configLineChart = {
+            type: "line",
+            data,
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                    },
+                    title: {
+                        display: true,
+                        font: {
+                            weight: '400'
+                        },
+                        text: "Check-In scores of your employees (past 7 days)"
+                    }
+                },
+                scales: {
+                    'y': {
+                        title: {
+                            display: true,
+                            text: "Check-In Score",
+                        },
+                        type: 'category',
+                        reverse: true,
+                        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                    },
+                    'x': {
+                        title: {
+                            display: true,
+                            text: "Last 7 days in day/month format"
+                        }
+                    }
+                }
+            }
+        };
+
+        Chart.defaults.color = '#D8DEE9';
+        Chart.defaults.font.size = 15;
+        Chart.defaults.font.family = "Segoe UI";
+        Chart.defaults.font.weight = "normal";
+        Chart.defaults.backgroundColor = "#D8DEE9";
+        Chart.defaults.borderColor = "#D8DEE9";
+
+        var chartLine = new Chart(
+            document.getElementById("chartLine"),
+            configLineChart
+        );
+    </script>
+</footer>
+
+<footer th:replace="fragments/footer :: footer">
+</footer>
 </html>

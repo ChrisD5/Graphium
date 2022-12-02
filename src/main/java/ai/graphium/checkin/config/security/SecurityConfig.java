@@ -69,7 +69,7 @@ public class SecurityConfig {
             var emailSupervisor = userRepository
                     .findByEmail("supervisor@kavin.rocks");
             if (emailSupervisor == null) {
-                emailSupervisor = new User("supervisor@kavin.rocks", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
+                emailSupervisor = new User("supervisor@kavin.rocks", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Email Supervisor", "+441234567890");
                 userRepository.save(emailSupervisor);
             }
             var teams = teamRepository
