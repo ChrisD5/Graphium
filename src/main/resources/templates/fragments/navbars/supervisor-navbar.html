@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body>
 <nav un-cloak th:fragment="navbar" class="bg-nord-0 my-2 px-2 sm:px-4 py-2.5 rounded">
     <div class="container flex flex-wrap items-center justify-between mx-auto">
@@ -18,11 +18,8 @@
                 <li>
                     <a th:href="@{/s}" th:classappend="${#httpServletRequest.getRequestURI() == '/s' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0'}" class="block py-2 pl-3 pr-4" aria-current="page">Home</a>
                 </li>
-                <li>
+                <li sec:authorize="hasRole('ROLE_EMPLOYEE')">
                     <a th:href="@{/e}" class="text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 block py-2 pl-3 pr-4" aria-current="page">Switch View</a>
-                </li>
-                <li>
-                    <a th:href="@{/s/team/Example}" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/s/team') ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0'}" class="block py-2 pl-3 pr-4">Team</a>
                 </li>
                 <li>
                     <a th:href="@{/s/employees}" th:classappend="${#httpServletRequest.getRequestURI() == '/s/employees' ? 'text-white bg-blue-700 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0'}" class="block py-2 pl-3 pr-4" aria-current="page">Employees</a>

@@ -67,12 +67,6 @@ public class SupervisorController {
         return "supervisor/index";
     }
 
-    @GetMapping("/team/{teamName}")
-    public String supervisorTeamController(@PathVariable("teamName") String teamName) {
-        // Ensure appropriate security checks are done here to only allow assigned supervisor access
-        return "supervisor/team";
-    }
-
     @GetMapping("/settings")
     public String supervisorSettingsController() {
         return "supervisor/settings";
