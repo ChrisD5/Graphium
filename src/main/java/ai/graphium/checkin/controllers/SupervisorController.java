@@ -5,10 +5,9 @@ import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
-import lombok.AllArgsConstructor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -30,8 +29,6 @@ public class SupervisorController {
     private UserRepository userRepository;
     private TeamRepository teamRepository;
     private EntityManager em;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @GetMapping("")
