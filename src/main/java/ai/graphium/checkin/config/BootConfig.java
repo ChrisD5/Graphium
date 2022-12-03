@@ -94,6 +94,7 @@ public class BootConfig {
             if (teams.size() < 2) {
                 var team1 = new Team(andrewsharp, "Team Alpha");
 
+                emailEmployee.setTeam(team1);
                 maxjones.setTeam(team1);
                 michaelsteer.setTeam(team1);
                 pollysmith.setTeam(team1);
@@ -101,6 +102,7 @@ public class BootConfig {
                 alicehitchin.setTeam(team1);
                 teamRepository.save(team1);
             }
+            userRepository.save(emailEmployee);
             userRepository.save(maxjones);
             userRepository.save(michaelsteer);
             userRepository.save(pollysmith);

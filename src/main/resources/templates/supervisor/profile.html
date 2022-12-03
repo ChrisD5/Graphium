@@ -5,70 +5,69 @@
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
-</div>
+    <div class="p-0">
+        <div class="p-8 shadow mt-10">
+            <div class="grid grid-cols-1 md:grid-cols-3">
+                <div class="grid grid-cols-3 text-center order-last md:order-first mt-10 md:mt-0">
 
-<div class="p-0">
-    <div class="p-8 shadow mt-10">
-        <div class="grid grid-cols-1 md:grid-cols-3">
-            <div class="grid grid-cols-3 text-center order-last md:order-first mt-10 md:mt-0">
-
+                </div>
+                <div class="relative">
+                    <img alt="Profile Picture"
+                         class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-slate-600"
+                         th:src="${image != null ? 'data:charset=utf-8;base64,' + image : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'}"/>
+                </div>
             </div>
-            <div class="relative">
-                <img alt="Profile Picture"
-                     class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-slate-600"
-                     th:src="${image != null ? 'data:charset=utf-8;base64,' + image : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'}"/>
+            <div class="mt-30"></div>
+
+
+            <div class="mt-5 text-center border-b pb-6">
+                <h1 class="text-3xl font-xs text-nord-6" th:text="${user.name}"><span
+                        class="font-light text-gray-500"></span>
+                </h1>
+                <p class="mt-4 text-nord-6" th:text="${user.team.name}"></p>
+                <p class="mt-4 text-nord-6" th:text="${user.phone}"></p>
+                <p class="mt-4 text-nord-6" th:text="${user.email}"></p>
             </div>
-        </div>
-        <div class="mt-30"></div>
 
+            <div class="mt-0 flex flex-col justify-center">
+                <button class="text-nord-6 py-2 px-4  font-medium mt-4">Supervisor Notes</button>
+                <p class="text-nord-6 text-center font-light lg:px-16">You've really outdone yourself this week Sanil;
+                    Great work on centering that div!</p>
+            </div>
 
-        <div class="mt-5 text-center border-b pb-6">
-            <h1 class="text-3xl font-xs text-nord-6" th:text="${user.name}"><span
-                    class="font-light text-gray-500"></span>
-            </h1>
-            <p class="mt-4 text-nord-6" th:text="${user.team.name}"></p>
-            <p class="mt-4 text-nord-6" th:text="${user.phone}"></p>
-            <p class="mt-4 text-nord-6" th:text="${user.email}"></p>
-        </div>
-
-        <div class="mt-0 flex flex-col justify-center">
-            <button class="text-nord-6 py-2 px-4  font-medium mt-4">Supervisor Notes</button>
-            <p class="text-nord-6 text-center font-light lg:px-16">You've really outdone yourself this week Sanil;
-                Great work on centering that div!</p>
-        </div>
-
-        <div class="mt-0 flex flex-col justify-center text-center">
-            <h2 class="text-nord-5 text-xl">Past Check-in history</h2>
-            <table class="border-collapse w-full">
-                <thead>
-                <tr>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Check-in Time
-                    </th>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Check-in
-                        rating
-                    </th>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Check-in
-                        notes
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
-                    th:each="checkin : ${checkins}">
-                    <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
-                        th:text="${#dates.format(checkin.time)}"></td>
-                    <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
-                        th:text="${checkin.rating}"></td>
-                    <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
-                        th:if="${checkin.note != null}"
-                        th:text="${checkin.note.text}"></td>
-                    <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
-                        th:if="${checkin.note == null}">
-                        No note provided
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="mt-0 flex flex-col justify-center text-center">
+                <h2 class="text-nord-5 text-xl">Past Check-in history</h2>
+                <table class="border-collapse w-full">
+                    <thead>
+                    <tr>
+                        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Check-in Time
+                        </th>
+                        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Check-in
+                            rating
+                        </th>
+                        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Check-in
+                            notes
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
+                        th:each="checkin : ${checkins}">
+                        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
+                            th:text="${#dates.format(checkin.time)}"></td>
+                        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
+                            th:text="${checkin.rating}"></td>
+                        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
+                            th:if="${checkin.note != null}"
+                            th:text="${checkin.note.text}"></td>
+                        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static"
+                            th:if="${checkin.note == null}">
+                            No note provided
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

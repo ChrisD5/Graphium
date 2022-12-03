@@ -1,44 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Employees | Supervisor Portal')" />
+<head th:replace="fragments/header :: header('Employees | Supervisor Portal')"/>
 <body class="bg-nord-0">
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
-</div>
-
-<div class="flex flex-col gap-4 mx-8 my-10">
-    <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Employees List</label>
-    <table class="border-collapse w-full">
-        <thead>
-        <tr>
-            <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell lg:w-1/4">Employee Name</th>
-            <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Assigned Team</th>
-            <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Average Well-being Score</th>
-            <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Action</th></tr>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="emp: ${employees}" class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>
-                <span th:text="${emp.name}"></span>
-            </td>
-            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Assigned Team</span>
-                <span th:text="${emp.team.name}"></span>
-            </td>
-            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
-                <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
-            </td>
-            <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-                <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
-                <a class="cursor-pointer" th:href="@{profile/{id} (id=${emp.id})}">View Employee</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Employees List</label>
+        <table class="border-collapse w-full">
+            <thead>
+            <tr>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell lg:w-1/4">Employee
+                    Name
+                </th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Assigned Team</th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Average Well-being
+                    Score
+                </th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Action</th>
+            </tr>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="emp: ${employees}"
+                class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>
+                    <span th:text="${emp.name}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Assigned Team</span>
+                    <span th:text="${emp.team.name}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
+                    <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
+                    <a class="cursor-pointer" th:href="@{profile/{id} (id=${emp.id})}">View Employee</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 

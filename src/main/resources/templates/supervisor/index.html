@@ -11,37 +11,35 @@
         <div class="shadow-lg rounded-lg overflow-hidden bg-nord-1 w-2/3 self-center">
             <canvas class="p-10" id="chartLine"></canvas>
         </div>
-        <div class="flex items-center justify-center pt-8">
-            <div class="text-center container">
-                <h2 class="text-nord-4 text-xl" th:if="${noUnreadAlerts}">No unread alerts</h2>
-                <h2 class="text-nord-4 text-xl" th:text="${unreadCount}  + ' Unread alerts'"
-                    th:unless="${noUnreadAlerts}"></h2>
-                <div th:each="alert : ${alerts}">
-                    <div class="flex justify-center my-2">
-                        <div class="flex flex-col rounded-lg shadow-lg p-4"
-                             th:classappend="${alert.readBySupervisor ? 'bg-nord-1' : 'bg-nord-3'}">
-                            <div class="flex justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-nord-4 font-bold text-xl" th:text="${alert.title}"></span>
-                                    <span class="text-nord-5 text-sm" th:text="${alert.supervisorMessage}"></span>
-                                </div>
-                                <div class="flex flex-col">
-                                    <span class="text-nord-5 text-sm" th:text="${#dates.format(alert.created)}"></span>
-                                </div>
-                            </div>
-                            <div class="flex justify-end">
-                                <form th:action="@{/s/alert/read}" th:method="post"
-                                      th:unless="${alert.readBySupervisor}">
-                                    <input th:name="id" th:value="${alert.id}" type="hidden">
-                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                            type="submit">
-                                        Mark as read
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    </div>
+    <div class="flex flex-col gap-4 mx-8 my-7">
+        <div>
+            <label class="text-nord-4 font-semibold tracking-wider text-lg">Alerts</label>
+            <span class="rounded-3xl bg-nord-4 text-nord-0 text-xs px-1 align-top font-semibold" th:unless="${noUnreadAlerts}"
+                  th:text="${unreadCount}">
+            </span>
+        </div>
+        <div class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div th:if="${alerts.size() < 1}" class="bg-nord-0 text-nord-4 p-4 my-4 rounded text-center" role="alert">
+                <p class="text-nord-6 font-semibold">No alerts, check back later</p>
+            </div>
+            <div th:classappend="${alert.readBySupervisor ? 'opacity-50' : ''}"
+                 class="bg-nord-0 relative border-l-4 border-orange-500 text-nord-4 p-4 my-4 rounded" role="alert"
+                 th:each="alert : ${alerts}">
+                <p class="text-xs text-nord-6" th:text="${#dates.format(alert.created)}"></p>
+                <p class="font-bold" th:text="${alert.title}"></p>
+                <p th:text="${alert.supervisorMessage}"></p>
+                <form th:action="@{/s/alert/read}" th:method="post" th:unless="${alert.readBySupervisor}">
+                    <label>
+                        <input class="hidden" type="submit" name="id" th:value="${alert.id}">
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                        <svg un-cloak
+                             class="hover:bg-nord-2 cursor-pointer fill-current h-6 w-6 bg-nord-0 text-nord-4 rounded-lg"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title>
+                            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                        </span>
+                    </label>
+                </form>
             </div>
         </div>
     </div>
