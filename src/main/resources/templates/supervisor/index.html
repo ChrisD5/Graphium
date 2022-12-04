@@ -15,7 +15,8 @@
     <div class="flex flex-col gap-4 mx-8 my-7">
         <div>
             <label class="text-nord-4 font-semibold tracking-wider text-lg">Alerts</label>
-            <span class="rounded-3xl bg-nord-4 text-nord-0 text-xs px-1 align-top font-semibold" th:unless="${noUnreadAlerts}"
+            <span class="rounded-3xl bg-nord-4 text-nord-0 text-xs px-1 align-top font-semibold"
+                  th:unless="${noUnreadAlerts}"
                   th:text="${unreadCount}">
             </span>
         </div>
@@ -90,6 +91,11 @@
                             display: true,
                             text: "Check-In Score",
                         },
+                        grid: {
+                            color: ['rgba(191,97,106,0.8)', 'rgba(191,97,106,0.8)', 'rgba(191,97,106,0.8)',
+                                'rgba(208,135,112,0.8)', 'rgba(208,135,112,0.8)', 'rgba(208,135,112,0.8)', 'rgba(208,135,112,0.8)',
+                                'rgba(163,190,140,0.8)', 'rgba(163,190,140,0.8)', 'rgba(163,190,140,0.8)']
+                        },
                         type: 'category',
                         reverse: true,
                         labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -104,8 +110,8 @@
             }
         };
 
-        Chart.defaults.color = '#D8DEE9';
-        Chart.defaults.font.size = 15;
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.font.size = 17;
         Chart.defaults.font.family = "Segoe UI";
         Chart.defaults.font.weight = "normal";
         Chart.defaults.backgroundColor = "#D8DEE9";
