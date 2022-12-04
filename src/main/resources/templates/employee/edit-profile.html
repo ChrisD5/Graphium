@@ -29,37 +29,29 @@
 
         <div class="mt-5 text-center border-b pb-6">
 
-            <h1 class="text-3xl font-xs text-nord-6">Update Details<span
-                    class="font-light text-gray-500"></span>
+            <h1 class="text-3xl font-xs text-nord-6">Update Details
             </h1>
             <form action="#" th:action="@{/e/profile/edit}" th:object="${user}" method="post" enctype="multipart/form-data">
-                <p class="mt-4 text-gray-500">Full-Name: <input type="text" pattern="[a-zA-Z ]+" th:field="*{name}"
+                <p class="mt-4 text-nord-6">Full-Name: <input type="text" pattern="[a-zA-Z ]+" th:field="*{name}"
                                                                 th:value="${user.name}"
                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
                 </p>
-                <p class="mt-4 text-gray-500">Phone(+44): <input type="tel" pattern="[0-9+]{3}[0-9]{10}"
+                <p class="mt-4 text-nord-6">Phone(+44): <input type="tel" pattern="[0-9+]{3}[0-9]{10}"
                                                                  th:field="*{phone}" th:value="${user.phone}"
                                                                  class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
                 </p>
-                <p class="mt-4 text-gray-500">Profile Picture: <input type="file" name="image" accept="image/*"
+                <p class="mt-4 text-nord-6">Profile Picture: <input type="file" name="image" accept="image/*"
                                                                  class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
                 </p>
-
                 <p class="mt-4 text-nord-6"><input type="submit" value="Submit"/> | <input type="reset"
                                                                                            value="Reset"/></p>
             </form>
 
         </div>
-        <div class="mt-0 flex flex-col justify-center">
-            <button
-                    class="text-nord-6 py-2 px-4  font-medium mt-4"
-            >Supervisor Notes
-            </button>
-            <p class="text-nord-6 text-center font-light lg:px-16">You've really outdone yourself this week Sanil;
-                Great work on centering that div!</p>
-
+        <div class="flex flex-col gap-4 mx-8 my-10">
+            <label class="text-nord-4 font-semibold tracking-wider text-lg text-center">Meeting Notes</label>
+            <p class="text-nord-6 text-center font-light lg:px-16">No meeting notes found</p>
         </div>
-
     </div>
 
 </div>

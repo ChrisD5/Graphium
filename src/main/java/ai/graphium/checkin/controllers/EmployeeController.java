@@ -50,7 +50,7 @@ public class EmployeeController {
         boolean noUnreadAlerts = alerts.stream().allMatch(Alert::isReadByTarget);
         int unreadCount = (int) alerts.stream().filter(alert -> !alert.isReadByTarget()).count();
 
-        model.addAttribute("checkedIn", true);
+        model.addAttribute("checkedIn", hasCheckedInToday);
         model.addAttribute("noUnreadAlerts", noUnreadAlerts);
         model.addAttribute("unreadCount", unreadCount);
         model.addAttribute("alerts", alerts);
@@ -137,6 +137,11 @@ public class EmployeeController {
         return "employee/settings";
     }
 
+    @GetMapping("/meeting")
+    public String employeeMeetingController() {
+        return "employee/schedule-meeting";
+    }
+
     @GetMapping("/profile")
     public String employeeProfileController(Model model, Authentication authentication) {
         var user = userRepository.findByEmail(authentication.getName());
@@ -157,7 +162,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/profile/edit")
-    public String formSubmit(@ModelAttribute EditEmployeeForm user, Model model, Authentication authentication, @RequestParam("image") MultipartFile file) throws IOException {
+    public String formSubmit(@ModelAttribute EditEmployeeForm user, Authentication authentication, @RequestParam("image") MultipartFile file) throws IOException {
         var userLookUp = userRepository.findByEmail(authentication.getName());
         userLookUp.setName(user.getName());
         userLookUp.setPhone(user.getPhone());

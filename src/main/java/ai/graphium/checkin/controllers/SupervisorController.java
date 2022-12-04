@@ -57,7 +57,7 @@ public class SupervisorController {
 
                 cq.where(cb.and(
                         root.get("id").in(sq),
-                        cb.gt(root.get("time"), System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7))
+                        cb.gt(root.get("time"), System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8))
                 ));
             }
             cq.orderBy(cb.desc(root.get("time")));
@@ -105,12 +105,6 @@ public class SupervisorController {
         alertRepository.save(alert);
 
         return "redirect:/s";
-    }
-
-    @GetMapping("/team/{teamName}")
-    public String supervisorTeamController(@PathVariable("teamName") String teamName) {
-        // Ensure appropriate security checks are done here to only allow assigned supervisor access
-        return "supervisor/team";
     }
 
     @GetMapping("/settings")
