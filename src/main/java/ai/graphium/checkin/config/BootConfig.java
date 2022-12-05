@@ -36,6 +36,8 @@ public class BootConfig {
         if (admin == null) {
             admin = new User(DEFAULT_USERNAME, passwordEncoder.encode(DEFAULT_PASSWORD), UserType.ADMIN, "Admin", "+441234567890");
             userRepository.save(admin);
+        } else {
+            return;
         }
         var pass = "frog";
 
