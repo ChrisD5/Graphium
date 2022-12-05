@@ -26,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Comparator;
 
 @Controller
 @RequestMapping("/e")
@@ -147,6 +148,11 @@ public class EmployeeController {
         var user = userRepository.findByEmail(authentication.getName());
         model.addAttribute("user", user);
         model.addAttribute("image", user.getImage() != null ? Base64.getEncoder().encodeToString(user.getImage()) : null);
+        model.addAttribute("checkins",
+                user.getCheckIns()
+                        .stream()
+                        .sorted(Comparator.comparingLong(CheckIn::getTime).reversed())
+                        .toList());
         return "employee/employee-profile";
     }
 
