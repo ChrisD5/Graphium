@@ -221,6 +221,13 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("assignsupervisortoteam", assignSupervisorToTeamForm);
             return "redirect:/admin/team#assignsup";
         }
+        boolean teamExists = teamRepository.existsById(assignSupervisorToTeamForm.getTeam_id());
+        if (!teamExists) {
+            redirectAttributes.addFlashAttribute("s_assignstatus", "error");
+            redirectAttributes.addFlashAttribute("s_assignmessage", "This team does not exist");
+            redirectAttributes.addFlashAttribute("assignsupervisortoteam", assignSupervisorToTeamForm);
+            return "redirect:/admin/team#assignsup";
+        }
         boolean hasTeam = teamRepository.existsBySupervisorId(assignSupervisorToTeamForm.getSupervisor_id());
         if (hasTeam) {
             redirectAttributes.addFlashAttribute("s_assignstatus", "error");
@@ -244,6 +251,13 @@ public class AdminController {
         if (!employeeExists) {
             redirectAttributes.addFlashAttribute("e_assignstatus", "error");
             redirectAttributes.addFlashAttribute("e_assignmessage", "This employee does not exist");
+            redirectAttributes.addFlashAttribute("assignemployeetoteam", assignEmployeeToTeamForm);
+            return "redirect:/admin/team#assignemp";
+        }
+        boolean teamExists = teamRepository.existsById(assignEmployeeToTeamForm.getTeam_id());
+        if (!teamExists) {
+            redirectAttributes.addFlashAttribute("e_assignstatus", "error");
+            redirectAttributes.addFlashAttribute("e_assignmessage", "This team does not exist");
             redirectAttributes.addFlashAttribute("assignemployeetoteam", assignEmployeeToTeamForm);
             return "redirect:/admin/team#assignemp";
         }
