@@ -39,6 +39,9 @@ public class AdminController {
         if (model.getAttribute("employee") == null) {
             model.addAttribute("employee", new CreateEmployeeForm());
         }
+        if (model.getAttribute("promoteemployeetosupervisor") == null) {
+            model.addAttribute("promoteemployeetosupervisor", new PromoteEmployeeToSupervisorForm());
+        }
         Collection<User> employees = userRepository.findByEmployeeAndSupervisorIsFalse(true);
         List<Team> teams = teamRepository.findAll();
         model.addAttribute("teams", teams);
@@ -98,6 +101,24 @@ public class AdminController {
         userRepository.save(employee);
         redirectAttributes.addFlashAttribute("delstatus", "success");
         redirectAttributes.addFlashAttribute("delmessage", String.format("The employee %s has been re-enabled", employee.getName()));
+        return "redirect:/admin/e";
+    }
+
+    @PostMapping("/e/promote")
+    public String adminPromoteEmployee(RedirectAttributes redirectAttributes, @ModelAttribute PromoteEmployeeToSupervisorForm promoteEmployeeToSupervisorForm) {
+        boolean employeeExists = userRepository.existsById(promoteEmployeeToSupervisorForm.getEmployee_id());
+        if (!employeeExists) {
+            redirectAttributes.addFlashAttribute("promstatus", "error");
+            redirectAttributes.addFlashAttribute("prommessage", "This employee does not exist");
+            return "redirect:/admin/e";
+        }
+
+        User employee = userRepository.findById(promoteEmployeeToSupervisorForm.getEmployee_id());
+        employee.setSupervisor(true);
+        userRepository.save(employee);
+
+        redirectAttributes.addFlashAttribute("promstatus", "success");
+        redirectAttributes.addFlashAttribute("prommessage", String.format("The employee %s has been promoted to supervisor", employee.getName()));
         return "redirect:/admin/e";
     }
 
