@@ -43,6 +43,8 @@ public class User {
     private byte[] image;
     @Column(nullable = false)
     private Date created;
+    @Column(name = "totp_secret", length = 32)
+    private String totpSecret;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "team_id")
     private Team team;
