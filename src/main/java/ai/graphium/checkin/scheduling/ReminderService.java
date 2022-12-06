@@ -22,7 +22,7 @@ public class ReminderService {
     private AlertService alertService;
 
     @Async
-    @Scheduled(cron = "0 0 0 * * MON-FRI")
+    @Scheduled(cron = "*/60 * * * * MON-FRI")
     public void missingCheckIn() {
         var cb = em.getCriteriaBuilder();
         var cq = cb.createQuery(User.class);
@@ -38,15 +38,18 @@ public class ReminderService {
         users.stream()
                 .filter(user -> {
                     var checkIns = user.getCheckIns();
-                    return checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24));
+                    var supervisor = user.getTeam().getSupervisor();
+                    return checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(supervisor.getSettingsAlertThreshold()));
                 })
                 .forEach(user -> {
                     var team = user.getTeam();
+                    var supervisor = team.getSupervisor();
+                    var plural = supervisor.getSettingsAlertThreshold() > 1 ? 's' : '\0';
                     try {
                         alertService.createAlert("Missing Check-In",
-                                "You have not checked in today. Please do not forget to check-in!",
-                                "Your employee " + user.getName() + " has not checked in today.",
-                                AlertType.LOW, AlertVisibility.ALL, user, team.getSupervisor());
+                                String.format("You have not checked in for more than %d day%s. Please do not forget to check-in!", supervisor.getSettingsAlertThreshold(), plural),
+                                String.format("Your employee " + user.getName() + " has not checked in for more than %d day%s.", supervisor.getSettingsAlertThreshold(), plural),
+                                AlertType.LOW, AlertVisibility.ALL, user, supervisor);
                     } catch (MessagingException e) {
                         e.printStackTrace();
                     }

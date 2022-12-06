@@ -24,9 +24,9 @@ public class AlertService {
         Alert alert = new Alert(target, supervisor, title, targetMessage, supervisorMessage, type, visibility);
         alertRepository.save(alert);
 
-        if (visibility == AlertVisibility.EMPLOYEE || visibility == AlertVisibility.ALL) {
-            mailerService.sendMail(target.getEmail(), title, targetMessage);
-        }
+//        if (visibility == AlertVisibility.EMPLOYEE || visibility == AlertVisibility.ALL) {
+//            mailerService.sendMail(target.getEmail(), title, targetMessage);
+//        }
 
         // Alert supervisor only if the alert has a medium or higher type
         if (type.compareTo(AlertType.MEDIUM) >= 0
