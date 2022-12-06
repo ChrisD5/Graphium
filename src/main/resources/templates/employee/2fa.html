@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Settings | 2FA')"/>
+<body class="bg-nord-0">
+
+<div class="container mx-auto">
+    <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
+</div>
+
+<form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/e/2fa}">
+    <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">2FA</h2>
+
+    <!-- Error message -->
+    <div class="flex justify-center" th:if="${error}">
+        <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
+            <span th:text="${error}"></span>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <input name="secret" th:value="${secret}" type="hidden">
+        <img alt="QR Code" class="w-1/5 mx-auto" th:src="'data:charset=utf-8;base64,' + ${qrdata}">
+    </div>
+    <div class="mb-4">
+        <label class="block text-nord-4 text-md font-bold mb-2" for="totp">
+            TOTP
+        </label>
+        <input class="bg-nord-6 shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
+               id="totp"
+               name="totp"
+               placeholder="TOTP"
+               type="number">
+    </div>
+    <div class="flex items-center justify-between mt-6">
+        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit">
+            Enable 2FA
+        </button>
+    </div>
+</form>
+</body>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

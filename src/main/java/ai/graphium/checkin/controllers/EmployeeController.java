@@ -14,6 +14,11 @@ import ai.graphium.checkin.repos.NoteRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import ai.graphium.checkin.services.AlertService;
 import ai.graphium.checkin.services.EmployeeService;
+import dev.samstevens.totp.code.CodeVerifier;
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import dev.samstevens.totp.qr.QrDataFactory;
+import dev.samstevens.totp.qr.QrGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.annotation.Secured;
@@ -35,6 +40,10 @@ import java.util.Comparator;
 public class EmployeeController {
 
     private final AlertRepository alertRepository;
+    private final SecretGenerator secretGenerator;
+    private final QrGenerator qrGenerator;
+    private final QrDataFactory qrDataFactory;
+    private final CodeVerifier codeVerifier;
     private UserRepository userRepository;
     private EmployeeService employeeService;
     private NoteRepository noteRepository;
@@ -176,5 +185,54 @@ public class EmployeeController {
         userRepository.save(userLookUp);
         return "redirect:/e/profile";
 
+    }
+
+    @GetMapping("2fa")
+    public String twoFactorAuth(Model model, Authentication authentication) throws QrGenerationException {
+        String secret = model.containsAttribute("secret") ?
+                (String) model.getAttribute("secret") :
+                secretGenerator.generate();
+        var qrData = qrDataFactory.newBuilder()
+                .secret(secret)
+                .issuer("Graphium")
+                .label(authentication.getName())
+                .build();
+
+        model.addAttribute("secret", secret);
+        model.addAttribute("qrdata", Base64.getEncoder().encodeToString(qrGenerator.generate(qrData)));
+
+        return "employee/2fa";
+    }
+
+    @PostMapping("2fa")
+    public String twoFactorAuth(@RequestParam("secret") String secret, @RequestParam("totp") String totp, Authentication authentication, RedirectAttributes redirectAttributes) {
+        var user = userRepository.findByEmail(authentication.getName());
+
+        redirectAttributes.addFlashAttribute("secret", secret);
+
+        if (user.getTotpSecret() != null) {
+            redirectAttributes.addFlashAttribute("error", "You have already enabled 2FA");
+            return "redirect:/e/2fa";
+        }
+
+        if (!secret.matches("^[A-Z\\d]{32}$")) {
+            redirectAttributes.addFlashAttribute("error", "Secret appears to be invalid");
+            return "redirect:/e/2fa";
+        }
+
+        if (!totp.matches("^\\d{6}$")) {
+            redirectAttributes.addFlashAttribute("error", "Invalid code provided");
+            return "redirect:/e/2fa";
+        }
+
+        if (!codeVerifier.isValidCode(secret, totp)) {
+            redirectAttributes.addFlashAttribute("error", "Invalid code provided");
+            return "redirect:/e/2fa";
+        }
+
+        user.setTotpSecret(secret);
+        userRepository.save(user);
+
+        return "redirect:/e";
     }
 }
