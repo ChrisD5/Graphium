@@ -39,7 +39,7 @@ public class ReminderService {
                 .filter(user -> {
                     var checkIns = user.getCheckIns();
                     var supervisor = user.getTeam().getSupervisor();
-                    return checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(supervisor.getSettingsAlertThreshold()));
+                    return !user.isSettingsAlertDisabled() && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(supervisor.getSettingsAlertThreshold())));
                 })
                 .forEach(user -> {
                     var team = user.getTeam();

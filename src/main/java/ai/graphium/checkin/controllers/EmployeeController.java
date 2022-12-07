@@ -143,8 +143,23 @@ public class EmployeeController {
     }
 
     @GetMapping("/settings")
-    public String employeeSettingsController() {
+    public String employeeSettingsController(Model model, Authentication authentication) {
+        var user = userRepository.findByEmail(authentication.getName());
+        boolean IsAlertsDisabled = user.isSettingsAlertDisabled();
+
+        model.addAttribute("IsAlertsDisabled", IsAlertsDisabled);
+
         return "employee/settings";
+    }
+
+    @PostMapping("/settings/alert/disable")
+    public String disableAlert(Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        user.setSettingsAlertDisabled(!user.isSettingsAlertDisabled());
+        userRepository.save(user);
+
+        return "redirect:/e";
     }
 
     @GetMapping("/meeting")

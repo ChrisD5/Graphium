@@ -21,6 +21,22 @@
     </div>
 </div>
 
+<div class="container mx-auto">
+    <div class="flex justify-center">
+        <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
+            <div class="text-nord-4 text-lg font-bold mb-2 text-center">
+                <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Alerts</h2>
+                <form method="post" th:action="@{/e/settings/alert/disable}"
+                      th:object="${IsAlertsDisabled}">
+                    <button class="bg-nord-10 hover:bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            th:text="${IsAlertsDisabled?'Enable':'Disable'}" type="submit">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 
 <footer th:replace="fragments/footer :: footer"></footer>
