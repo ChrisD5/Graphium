@@ -38,6 +38,8 @@ public class User {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
+    private boolean SettingsAlertDisabled;
+    @Column(nullable = false)
     private String phone;
     @Column(length = 67000)
     private byte[] image;
