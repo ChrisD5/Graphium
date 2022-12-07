@@ -59,6 +59,9 @@ public class User {
     @OneToMany(mappedBy = "target", cascade = CascadeType.ALL)
     private Set<Alert> alerts;
 
+    @Column(nullable = false, columnDefinition = "int default 1")
+    private int SettingsAlertThreshold = 1;
+
 
     public User(String email, String password, UserType userType, String name, String phone) {
         this.email = email;

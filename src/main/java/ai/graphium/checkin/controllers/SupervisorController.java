@@ -4,6 +4,7 @@ import ai.graphium.checkin.entity.Alert;
 import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.forms.SetSupervisorAlertThresholdForm;
 import ai.graphium.checkin.repos.AlertRepository;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
 import java.util.*;
@@ -108,8 +110,25 @@ public class SupervisorController {
     }
 
     @GetMapping("/settings")
-    public String supervisorSettingsController() {
+    public String supervisorSettingsController(Model model, Authentication authentication) {
+        User supervisor = userRepository.findByEmail(authentication.getName());
+        model.addAttribute("alertthreshold", new SetSupervisorAlertThresholdForm(supervisor.getSettingsAlertThreshold()));
         return "supervisor/settings";
+    }
+
+    @PostMapping("/settings/alert/threshold")
+    public String setSupervisorAlertThresholdSettings(RedirectAttributes redirectAttributes, @ModelAttribute SetSupervisorAlertThresholdForm setSupervisorAlertThresholdForm, Authentication authentication) {
+        if (setSupervisorAlertThresholdForm.getThreshold() > 10 || setSupervisorAlertThresholdForm.getThreshold() < 0) {
+            redirectAttributes.addFlashAttribute("flagstatus", "error");
+            redirectAttributes.addFlashAttribute("flagmessage", "Invalid Value for Threshold");
+            return "redirect:/s/settings";
+        }
+        User supervisor = userRepository.findByEmail(authentication.getName());
+        supervisor.setSettingsAlertThreshold(setSupervisorAlertThresholdForm.getThreshold());
+        userRepository.save(supervisor);
+        redirectAttributes.addFlashAttribute("flagstatus", "success");
+        redirectAttributes.addFlashAttribute("flagmessage", "Updated Flag Threshold");
+        return "redirect:/s/settings";
     }
 
     @GetMapping("/employees")

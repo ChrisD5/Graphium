@@ -10,7 +10,7 @@
         <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${team}" th:action="@{/admin/team/create}"
               method="post">
             <p th:classappend="${createstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
-               class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${status}"
+               class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${createstatus}"
                th:text="${createstatus == 'error' ? 'Error: ' + createmessage : 'Success: ' + createmessage}">
                 Error Creating Team
             </p>
