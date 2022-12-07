@@ -1,40 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Settings | Supervisor Portal')" />
+<head th:replace="fragments/header :: header('Settings | Supervisor Portal')"/>
 <body class="bg-nord-0">
 
 <div class="container mx-auto">
-  <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
-  <div class="flex flex-col gap-4 mx-8 my-10">
-    <label class="text-nord-4 font-semibold tracking-wider text-lg">Supervisor Settings</label>
-    <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${alertthreshold}" th:action="@{/s/settings/alert/threshold}"
-          method="post">
-      <p th:classappend="${flagstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
-         class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${flagstatus}"
-         th:text="${flagstatus == 'error' ? 'Error: ' + flagmessage : 'Success: ' + flagmessage}">
-        Error Changing Flag
-      </p>
-      <div class="flex">
-        <div class="mr-10 w-1/2">
-          <label class="block text-nord-4 text-md font-bold" for="threshold">
-            Alert Flag Threshold
-          </label>
-          <label class="block text-nord-4 text-xs mb-2" for="threshold">
-            Receive alerts only if an employee has not checked in for a custom no. of days
-          </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                 id="threshold" type="number" placeholder="1 Day" th:field="*{threshold}" name="threshold"
-                 th:value="${alertthreshold?.threshold}" required min="1" max="10">
-        </div>
-      </div>
-      <div class="my-5 flex items-center justify-between">
-        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit">
-          Update Threshold
-        </button>
-      </div>
-    </form>
-  </div>
+    <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Supervisor Settings</label>
+        <form class="bg-nord-1 shadow-md rounded px-8 mb-4" method="post"
+              th:action="@{/s/settings/alert/threshold}"
+              th:object="${alertthreshold}">
+            <p class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+               th:classappend="${flagstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" th:if="${flagstatus}"
+               th:text="${flagstatus == 'error' ? 'Error: ' + flagmessage : 'Success: ' + flagmessage}">
+                Error Changing Flag
+            </p>
+            <div class="flex">
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold" for="threshold">
+                        Alert Flag Threshold
+                    </label>
+                    <label class="block text-nord-4 text-xs mb-2" for="threshold">
+                        Receive alerts only if an employee has not checked in for a custom no. of days
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                           id="threshold" max="10" min="1" name="threshold" placeholder="1 Day"
+                           required th:field="*{threshold}" th:value="${alertthreshold?.threshold}" type="number">
+                </div>
+            </div>
+            <div class="my-5 flex items-center justify-between">
+                <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    Update Threshold
+                </button>
+            </div>
+        </form>
+
+        <!-- Allow entering an ical URL to import -->
+        <form method="post" th:action="@{/s/settings}">
+            <div class="bg-nord-2 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
+                <div class="text-nord-4 text-lg font-bold mb-2 text-center">
+
+                    <!-- Flash message for error -->
+                    <div class="flex justify-center" th:if="${error}">
+                        <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
+                            <span th:text="${error}"></span>
+                        </div>
+                    </div>
+
+                    <!-- Flash message for success -->
+                    <div class="flex justify-center" th:if="${message}">
+                        <div class="bg-nord-14 rounded m-2 p-2 text-nord-0 text-s italic text-center w-1/2">
+                            <span th:text="${message}"></span>
+                        </div>
+                    </div>
+
+
+                    <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Sync Calendar</h2>
+                    <input class="bg-nord-10 text-nord-5 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                           name="icalUrl" placeholder="Enter iCal URL"
+                           th:value="${supervisor.icalUrl}"
+                           type="text">
+                    <button class="!bg-nord-10 hover:!bg-nord-9 text-nord-4 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            type="submit">
+                        Import
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 </body>

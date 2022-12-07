@@ -11,6 +11,9 @@ import ai.graphium.checkin.repos.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.component.VEvent;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -111,9 +115,37 @@ public class SupervisorController {
 
     @GetMapping("/settings")
     public String supervisorSettingsController(Model model, Authentication authentication) {
-        User supervisor = userRepository.findByEmail(authentication.getName());
+        var supervisor = userRepository.findByEmail(authentication.getName());
+        model.addAttribute("supervisor", supervisor);
         model.addAttribute("alertthreshold", new SetSupervisorAlertThresholdForm(supervisor.getSettingsAlertThreshold()));
         return "supervisor/settings";
+    }
+
+    @PostMapping("/settings")
+    public String supervisorSettingsControllerPost(@RequestParam("icalUrl") @Nullable String icalUrl, RedirectAttributes redirectAttributes, Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName());
+
+        if (icalUrl != null && !icalUrl.isBlank()) {
+            CalendarBuilder builder = new CalendarBuilder();
+            try {
+                var calendar = builder.build(new URL(icalUrl).openStream());
+                boolean hasEvents = calendar.getComponents()
+                        .stream().anyMatch(VEvent.class::isInstance);
+
+                if (!hasEvents) {
+                    redirectAttributes.addFlashAttribute("error", "No events found in calendar");
+                    return "redirect:/s/settings";
+                }
+
+                user.setIcalUrl(icalUrl);
+                userRepository.save(user);
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("error", "Invalid iCal URL");
+                return "redirect:/s/settings";
+            }
+        }
+
+        return "redirect:/s/settings";
     }
 
     @PostMapping("/settings/alert/threshold")

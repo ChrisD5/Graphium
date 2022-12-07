@@ -62,6 +62,9 @@ public class User {
     @Column(nullable = false, columnDefinition = "int default 1")
     private int SettingsAlertThreshold = 1;
 
+    @Column(name = "ical_url")
+    private String icalUrl;
+
 
     public User(String email, String password, UserType userType, String name, String phone) {
         this.email = email;
