@@ -3,15 +3,15 @@
 <head th:replace="fragments/header :: header('Login | Graphium Employee Portal')"/>
 <body>
 <!-- Login Page with Tailwind -->
-<div un-cloak class="bg-nord-0 flex items-center justify-center h-screen">
+<div class="bg-nord-0 flex items-center justify-center h-screen" un-cloak>
     <div class="w-full max-w-xs">
-        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:action="@{/login}" method="post">
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/login}">
             <!-- Logo -->
             <div class="flex justify-center">
                 <div class="bg-nord-6 rounded w-2/5">
-                    <img class="w-full h-full"
-                         src="/logo.gif"
-                         alt="Logo">
+                    <img alt="Logo"
+                         class="w-full h-full"
+                         src="/logo.gif">
                 </div>
             </div>
             <div class="mb-4">
@@ -19,21 +19,30 @@
                     Email
                 </label>
                 <input class="bg-nord-6 shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
-                       name="email" id="email" type="text" placeholder="Email">
+                       id="email" name="email" placeholder="Email" type="text">
             </div>
-            <div class="mb-6">
+            <div>
                 <label class="block text-nord-4 text-md font-bold mb-2" for="password">
                     Password
                 </label>
                 <input class="bg-nord-6 shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                       th:classappend="${param.error} ? 'border-nord-11' : ''"
+                       id="password"
                        name="password"
-                       id="password" type="password" placeholder="*****">
-                <p class="text-nord-11 text-xs italic" th:if="${param.error}">
-                    Invalid email or password.
-                </p>
+                       placeholder="*****" th:classappend="${param.error} ? 'border-nord-11' : ''" type="password">
             </div>
-            <div class="flex items-center justify-between">
+            <div>
+                <label class="block text-nord-4 text-md font-bold mb-2" for="totp">
+                    TOTP
+                </label>
+                <input class="bg-nord-6 shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                       id="totp"
+                       name="totp"
+                       placeholder="Only if set" th:classappend="${param.error} ? 'border-nord-11' : ''" type="number">
+            </div>
+            <p class="text-nord-11 text-xs italic" th:if="${param.error}">
+                Invalid email, password or 2fa totp.
+            </p>
+            <div class="flex items-center justify-between mt-6">
                 <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="submit">
                     Sign In
@@ -49,6 +58,15 @@
     </div>
 </div>
 </body>
+
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        display: none;
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+</style>
 
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>

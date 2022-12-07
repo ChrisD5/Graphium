@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Settings | Employee Check-In Portal')" />
+<head th:replace="fragments/header :: header('Settings | Employee Check-In Portal')"/>
 <body class="bg-nord-0">
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
+</div>
+
+<div class="container mx-auto">
+    <div class="flex justify-center">
+        <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
+            <div class="text-nord-4 text-lg font-bold mb-2 text-center">
+                <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Security</h2>
+                <a class="bg-nord-10 hover:bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                   href="/e/2fa">
+                    2FA Settings
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
