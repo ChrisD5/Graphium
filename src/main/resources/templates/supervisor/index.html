@@ -8,8 +8,8 @@
     <div class="flex flex-col gap-4 mx-8 my-10">
         <label class="text-nord-4 font-semibold tracking-wider text-lg"
                th:text="${'Welcome to your dashboard, ' + supervisor.name}"></label>
-        <div class="shadow-lg rounded-lg overflow-hidden bg-nord-1 w-2/3 self-center">
-            <canvas class="p-10" id="chartLine"></canvas>
+        <div class="shadow-lg rounded-lg aspect-video max-w-screen-md bg-nord-1 self-center">
+            <canvas class="p-5" id="chartLine"></canvas>
         </div>
     </div>
     <div class="flex flex-col gap-4 mx-8 my-7">
@@ -73,6 +73,8 @@
             type: "line",
             data,
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: true,
