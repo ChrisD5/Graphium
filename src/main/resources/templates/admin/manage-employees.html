@@ -1,96 +1,150 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Manage Employees | Admin Portal')" />
+<head th:replace="fragments/header :: header('Manage Employees | Admin Portal')"/>
 <body class="bg-nord-0">
 
 <div class="container mx-auto">
-  <div th:replace="fragments/navbars/admin-navbar :: navbar"/>
-  <div class="flex flex-col gap-4 mx-8 my-10">
-    <label class="text-nord-4 font-semibold tracking-wider text-lg">Create Employee</label>
-    <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${employee}" th:action="@{/admin/e/create}" method="post">
-      <p th:classappend="${status == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${status}" th:text="${status == 'error' ? 'Error: ' + message : 'Success: ' + message}">
-        Error Creating Employee
-      </p>
-      <div class="flex">
-        <div class="mr-10 w-1/2">
-          <label class="block text-nord-4 text-md font-bold mb-2" for="name">
-            Full Name
-          </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                 id="name" type="text" placeholder="Full Name" th:field="*{name}" name="name" th:value="${employee?.name}" required>
-        </div>
-        <div class="mr-10 w-1/2">
-          <label class="block text-nord-4 text-md font-bold mb-2" for="email">
-            Email
-          </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                 th:field="*{email}" id="email" type="email" placeholder="Email" name="email" th:value="${employee?.email}" required>
-        </div>
-      </div>
-      <div class="my-5 flex">
-        <div class="mr-10 w-1/2">
-          <label class="block text-nord-4 text-md font-bold mb-2" for="phone">
-            Phone Number
-          </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                 th:field="*{phone}" id="phone" type="tel" placeholder="Start with +44" pattern="[0-9+]{3}[0-9]{10}" th:value="${employee?.phone}" required>
-        </div>
-        <div class="mr-10 w-1/2">
-          <label class="block text-gray-700 text-md font-bold mb-2" for="team">Select an option</label>
-          <select required th:value="${employee?.team_id}" name="id" th:field="*{team_id}" id="team" class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-            <option th:value="0" selected>Assign a Team</option>
-            <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
-          </select>
-        </div>
-      </div>
-      <div class="my-5 flex items-center justify-between">
-        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit">
-          Create Employee
-        </button>
-      </div>
-    </form>
-  </div>
-  <div class="flex flex-col gap-4 mx-8 my-10">
-    <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Employees List</label>
-    <p th:classappend="${delstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
-       th:if="${delstatus}" th:text="${delstatus == 'error' ? 'Error: ' + delmessage : 'Success: ' + delmessage}">
-      Error Disabling Employee
-    </p>
-    <table class="border-collapse w-full">
-      <thead>
-      <tr>
-        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell lg:w-1/4">Employee Name</th>
-        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Assigned Team</th>
-        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Average Well-being Score</th>
-        <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="emp: ${employees}" class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0">
-        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>
-          <span th:text="${emp.name + (emp.disabled ? ' (Disabled)' : '')}"></span>
-        </td>
-        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
-          <span th:text="${emp.team.name}"></span>
-        </td>
-        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
-          <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
-        </td>
-        <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
-          <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
-          <form th:action="@{'/admin/e/{ble}/{id}'(ble=${emp.disabled ? 'enable' : 'disable'},id=${emp.id})}" method="post">
-            <input type="hidden" name="_method" value="delete"/>
-            <button type="submit" class="cursor-pointer" th:text="${emp.disabled ? 'Enable' : 'Disable'}">Disable</button>
-          </form>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+    <div th:replace="fragments/navbars/admin-navbar :: navbar"/>
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Create Employee</label>
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/admin/e/create}"
+              th:object="${employee}">
+            <p class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+               th:classappend="${status == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" th:if="${status}"
+               th:text="${status == 'error' ? 'Error: ' + message : 'Success: ' + message}">
+                Error Creating Employee
+            </p>
+            <div class="flex">
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold mb-2" for="name">
+                        Full Name
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                           id="name" name="name" placeholder="Full Name" required th:field="*{name}"
+                           th:value="${employee?.name}" type="text">
+                </div>
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold mb-2" for="email">
+                        Email
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                           id="email" name="email" placeholder="Email" required th:field="*{email}"
+                           th:value="${employee?.email}" type="email">
+                </div>
+            </div>
+            <div class="my-5 flex">
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold mb-2" for="phone">
+                        Phone Number
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                           id="phone" pattern="[0-9+]{3}[0-9]{10}" placeholder="Start with +44" required
+                           th:field="*{phone}"
+                           th:value="${employee?.phone}" type="tel">
+                </div>
+                <div class="mr-10 w-1/2">
+                    <label class="block text-gray-700 text-md font-bold mb-2" for="team">Select an option</label>
+                    <select class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            id="team" name="id" required th:field="*{team_id}"
+                            th:value="${employee?.team_id}">
+                        <option selected th:value="0">Assign a Team</option>
+                        <option th:each="team : ${teams}" th:text="${team.name}" th:value="${team.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="my-5 flex items-center justify-between">
+                <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    Create Employee
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="flex flex-col gap-4 mx-8 my-10" id="promote">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Promote Employee To Supervisor</label>
+        <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post"
+              th:action="@{/admin/e/promote}"
+              th:object="${promoteemployeetosupervisor}">
+            <p class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+               th:classappend="${promstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
+               th:if="${promstatus}"
+               th:text="${promstatus == 'error' ? 'Error: ' + prommessage : 'Success: ' + prommessage}">
+                Error Finding Employee
+            </p>
+            <div class="flex">
+                <div class="mr-10 w-1/2">
+                    <label class="block text-nord-4 text-md font-bold mb-2" for="team">Select an Employee</label>
+                    <select class="bg-nord-6 text-nord-1 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            id="employee" name="employee_id"
+                            required th:field="${promoteemployeetosupervisor.employee_id}"
+                            th:value="${promoteemployeetosupervisor?.employee_id}">
+                        <option selected th:value="0">Select an Employee</option>
+                        <option th:each="employee : ${employees}" th:text="${employee.name}"
+                                th:value="${employee.id}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="my-5 flex items-center justify-between">
+                <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    Promote Employee To Supervisor
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Full Employees List</label>
+        <p class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+           th:classappend="${delstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
+           th:if="${delstatus}" th:text="${delstatus == 'error' ? 'Error: ' + delmessage : 'Success: ' + delmessage}">
+            Error Disabling Employee
+        </p>
+        <table class="border-collapse w-full">
+            <thead>
+            <tr>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell lg:w-1/4">Employee
+                    Name
+                </th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Assigned Team</th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Average Well-being
+                    Score
+                </th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="bg-nord-1 lg:hover:bg-nord-2 flex lg:table-row flex-row lg:flex-row flex-wrap lg:flex-no-wrap mb-10 lg:mb-0"
+                th:each="emp: ${employees}">
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Employee Name</span>
+                    <span th:text="${emp.name + (emp.disabled ? ' (Disabled)' : '')}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
+                    <span th:text="${emp.team.name}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
+                    <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
+                    <form method="post"
+                          th:action="@{'/admin/e/{ble}/{id}'(ble=${emp.disabled ? 'enable' : 'disable'},id=${emp.id})}">
+                        <input name="_method" type="hidden" value="delete"/>
+                        <button class="cursor-pointer" th:text="${emp.disabled ? 'Enable' : 'Disable'}" type="submit">
+                            Disable
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>
