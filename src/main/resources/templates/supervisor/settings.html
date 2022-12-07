@@ -5,6 +5,36 @@
 
 <div class="container mx-auto">
   <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+  <div class="flex flex-col gap-4 mx-8 my-10">
+    <label class="text-nord-4 font-semibold tracking-wider text-lg">Supervisor Settings</label>
+    <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:object="${alertthreshold}" th:action="@{/s/settings/alert/threshold}"
+          method="post">
+      <p th:classappend="${flagstatus == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
+         class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10" th:if="${flagstatus}"
+         th:text="${flagstatus == 'error' ? 'Error: ' + flagmessage : 'Success: ' + flagmessage}">
+        Error Changing Flag
+      </p>
+      <div class="flex">
+        <div class="mr-10 w-1/2">
+          <label class="block text-nord-4 text-md font-bold" for="threshold">
+            Alert Flag Threshold
+          </label>
+          <label class="block text-nord-4 text-xs mb-2" for="threshold">
+            Receive alerts only if an employee has not checked in for a custom no. of days
+          </label>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                 id="threshold" type="number" placeholder="1 Day" th:field="*{threshold}" name="threshold"
+                 th:value="${alertthreshold?.threshold}" required min="1" max="10">
+        </div>
+      </div>
+      <div class="my-5 flex items-center justify-between">
+        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit">
+          Update Threshold
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 </body>

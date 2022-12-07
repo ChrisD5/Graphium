@@ -22,7 +22,7 @@ public class ReminderService {
     private AlertService alertService;
 
     @Async
-    @Scheduled(cron = "*/60 * * * * MON-FRI")
+    @Scheduled(cron = "0 0 0 * * MON-FRI")
     public void missingCheckIn() {
         var cb = em.getCriteriaBuilder();
         var cq = cb.createQuery(User.class);
