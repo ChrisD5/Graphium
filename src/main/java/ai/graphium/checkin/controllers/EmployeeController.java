@@ -159,7 +159,7 @@ public class EmployeeController {
         user.setSettingsAlertDisabled(!user.isSettingsAlertDisabled());
         userRepository.save(user);
 
-        return "redirect:/e";
+        return "redirect:/e/settings";
     }
 
     @GetMapping("/meeting")
