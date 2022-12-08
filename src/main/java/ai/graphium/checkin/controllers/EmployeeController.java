@@ -68,8 +68,9 @@ public class EmployeeController {
 
         boolean hasCheckedInToday = employeeService.hasCheckedInToday(authentication.getName());
         var user = userRepository.findByEmail(authentication.getName());
+        var allAlerts = user.getAlerts();
 
-        var alerts = user.getAlerts();
+        var alerts = allAlerts.stream().filter(alert -> alert.getVisibility().equals(AlertVisibility.EMPLOYEE) || alert.getVisibility().equals(AlertVisibility.ALL)).toList();
         boolean noUnreadAlerts = alerts.stream().allMatch(Alert::isReadByTarget);
         int unreadCount = (int) alerts.stream().filter(alert -> !alert.isReadByTarget()).count();
 
