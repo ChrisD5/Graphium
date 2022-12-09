@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.JoinType;
+import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 
 @AllArgsConstructor
@@ -34,6 +35,7 @@ public class ReminderService {
         ));
         root.fetch("checkIns", JoinType.LEFT);
         root.fetch("team", JoinType.INNER).fetch("supervisor", JoinType.INNER);
+        cq.distinct(true);
         var users = em.createQuery(cq).getResultList();
         users.stream()
                 .filter(user -> {
@@ -50,6 +52,39 @@ public class ReminderService {
                                 String.format("You have not checked in for more than %d day%s. Please do not forget to check-in!", supervisor.getSettingsAlertThreshold(), plural),
                                 String.format("Your employee " + user.getName() + " has not checked in for more than %d day%s.", supervisor.getSettingsAlertThreshold(), plural),
                                 AlertType.LOW, AlertVisibility.ALL, user, supervisor);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+    @Async
+    @Scheduled(cron = "0 0 */1 * * MON-FRI")
+    public void reminderCheckIn() {
+        var cb = em.getCriteriaBuilder();
+        var cq = cb.createQuery(User.class);
+        var root = cq.from(User.class);
+        cq.select(root);
+        cq.where(cb.and(
+                cb.isTrue(root.get("employee")),
+                cb.isNotNull(root.get("team"))
+        ));
+        root.fetch("checkIns", JoinType.LEFT);
+        root.fetch("team", JoinType.INNER).fetch("supervisor", JoinType.INNER);
+        cq.distinct(true);
+        var users = em.createQuery(cq).getResultList();
+        users.stream()
+                .filter(user -> {
+                    var checkIns = user.getCheckIns();
+                    LocalTime time = LocalTime.parse(user.getSettingsAlertReminder().toString());
+                    return (time.getHour() == LocalTime.now().getHour()) && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
+                })
+                .forEach(user -> {
+                    try {
+                        alertService.createAlert("Check-In Reminder",
+                                "This is your daily reminder to check-in. Please do not forget!",
+                                "Your employee " + user.getName() + " has just been reminded to check-in",
+                                AlertType.LOW, AlertVisibility.EMPLOYEE, user, user.getTeam().getSupervisor());
                     } catch (MessagingException e) {
                         e.printStackTrace();
                     }

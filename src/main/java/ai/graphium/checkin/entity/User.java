@@ -8,6 +8,7 @@ import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -63,6 +64,9 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "int default 1")
     private int SettingsAlertThreshold = 1;
+
+    @Column(nullable = false)
+    private Time SettingsAlertReminder = Time.valueOf("13:00:00");
 
     @Column(name = "ical_url")
     private String icalUrl;
