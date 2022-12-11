@@ -4,6 +4,7 @@ import ai.graphium.checkin.entity.Alert;
 import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.forms.SetSupervisorAlertThresholdForm;
 import ai.graphium.checkin.repos.AlertRepository;
 import ai.graphium.checkin.repos.MeetingRepository;
@@ -77,7 +78,8 @@ public class SupervisorController {
             var cq = cb.createQuery(Alert.class);
             var root = cq.from(Alert.class);
             cq.select(root);
-            cq.where(cb.equal(root.get("supervisor"), team.getSupervisor()));
+            var filterVisibility = cb.or(cb.equal(root.get("visibility"), AlertVisibility.ALL), cb.equal(root.get("visibility"), AlertVisibility.SUPERVISOR));
+            cq.where(cb.and(cb.equal(root.get("supervisor"), team.getSupervisor())), filterVisibility);
             cq.orderBy(cb.desc(root.get("created")));
             alerts = em.createQuery(cq).getResultList();
         }
