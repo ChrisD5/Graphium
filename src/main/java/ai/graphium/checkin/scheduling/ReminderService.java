@@ -59,7 +59,7 @@ public class ReminderService {
     }
 
     @Async
-    @Scheduled(cron = "0 0 */1 * * MON-FRI")
+    @Scheduled(cron = "0 0 * * * MON-FRI")
     public void reminderCheckIn() {
         var cb = em.getCriteriaBuilder();
         var cq = cb.createQuery(User.class);
@@ -77,7 +77,9 @@ public class ReminderService {
                 .filter(user -> {
                     var checkIns = user.getCheckIns();
                     LocalTime time = LocalTime.parse(user.getSettingsAlertReminder().toString());
-                    return !user.isSettingsAlertDisabled() && (time.getHour() == LocalTime.now().getHour()) && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
+                    long timeTocheck = System.currentTimeMillis();
+                    timeTocheck -= timeTocheck % TimeUnit.DAYS.toMillis(1);
+                    return !user.isSettingsAlertDisabled() && (time.getHour() == LocalTime.now().getHour()) && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > timeTocheck));
                 })
                 .forEach(user -> {
                     try {
