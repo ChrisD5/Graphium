@@ -6,6 +6,7 @@ import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.forms.SetSupervisorAlertThresholdForm;
 import ai.graphium.checkin.repos.AlertRepository;
+import ai.graphium.checkin.repos.MeetingRepository;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class SupervisorController {
 
     private final AlertRepository alertRepository;
+    private final MeetingRepository meetingRepository;
     private UserRepository userRepository;
     private TeamRepository teamRepository;
     private EntityManager em;
@@ -111,6 +113,79 @@ public class SupervisorController {
         alertRepository.save(alert);
 
         return "redirect:/s";
+    }
+
+    @GetMapping("meetings")
+    public String meetings(Model model, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetings = meetingRepository.findByRequestee(user);
+
+        model.addAttribute("meetings", meetings);
+
+        return "supervisor/meetings";
+    }
+
+    @PostMapping("meetings/accept")
+    public String acceptMeeting(@RequestParam("id") long id, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(id);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequestee().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        meeting.setConfirmed(true);
+        meetingRepository.save(meeting);
+
+        return "redirect:/s/meetings";
+    }
+
+    @PostMapping("meetings/reschedule")
+    public String rescheduleMeeting(@RequestParam("id") long id, @RequestParam("time") String timeStr, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(id);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequestee().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        if (timeStr.isBlank()) {
+            return "redirect:/s/meetings";
+        }
+
+        long time;
+
+        try {
+            time = Long.parseLong(timeStr);
+        } catch (NumberFormatException e) {
+            return "redirect:/s/meetings";
+        }
+
+        if (time < System.currentTimeMillis()) {
+            return "redirect:/s/meetings";
+        }
+
+        meeting.setTime(time);
+        meeting.setConfirmed(true);
+
+        meetingRepository.save(meeting);
+
+        return "redirect:/s/meetings";
     }
 
     @GetMapping("/settings")
