@@ -39,8 +39,6 @@ public class User {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private boolean SettingsAlertDisabled;
-    @Column(nullable = false)
     private String phone;
     @Column(length = 67000)
     private byte[] image;
@@ -64,6 +62,9 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "int default 1")
     private int SettingsAlertThreshold = 1;
+
+    @Column(nullable = false)
+    private boolean SettingsAlertDisabled = false;
 
     @Column(nullable = false)
     private Time SettingsAlertReminder = Time.valueOf("13:00:00");

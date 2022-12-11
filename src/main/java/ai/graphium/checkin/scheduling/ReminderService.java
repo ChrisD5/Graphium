@@ -77,7 +77,7 @@ public class ReminderService {
                 .filter(user -> {
                     var checkIns = user.getCheckIns();
                     LocalTime time = LocalTime.parse(user.getSettingsAlertReminder().toString());
-                    return (time.getHour() == LocalTime.now().getHour()) && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
+                    return !user.isSettingsAlertDisabled() && (time.getHour() == LocalTime.now().getHour()) && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.HOURS.toMillis(24)));
                 })
                 .forEach(user -> {
                     try {
