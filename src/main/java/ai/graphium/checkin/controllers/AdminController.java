@@ -127,6 +127,9 @@ public class AdminController {
         if (model.getAttribute("supervisor") == null) {
             model.addAttribute("supervisor", new CreateSupervisorForm());
         }
+        if (model.getAttribute("demotesupervisortoemployee") == null) {
+            model.addAttribute("demotesupervisortoemployee", new DemoteSupervisorToEmployeeForm());
+        }
         Collection<SupervisorJoinTeam> supervisorJoinTeams = new ArrayList<>();
         Collection<User> supervisors = userRepository.findBySupervisorIsTrue();
         for (User u : supervisors) {
@@ -140,7 +143,32 @@ public class AdminController {
             supervisorJoinTeams.add(supervisorJoinTeam);
         }
         model.addAttribute("supervisors", supervisorJoinTeams);
+
         return "admin/manage-supervisors";
+    }
+
+    @PostMapping("/e/demote")
+    public String adminDemoteSupervisor(RedirectAttributes redirectAttributes, @ModelAttribute DemoteSupervisorToEmployeeForm demoteSupervisorToEmployeeForm) {
+        boolean supervisorExists = userRepository.existsById(demoteSupervisorToEmployeeForm.getSupervisor_id());
+        if (!supervisorExists) {
+            redirectAttributes.addFlashAttribute("demstatus", "error");
+            redirectAttributes.addFlashAttribute("demmessage", "This employee does not exist");
+            return "redirect:/admin/s";
+        }
+
+        User supervisor = userRepository.findById(demoteSupervisorToEmployeeForm.getSupervisor_id());
+        Team findTeam = teamRepository.findBySupervisor(supervisor);
+        if (findTeam != null) {
+            redirectAttributes.addFlashAttribute("demstatus", "error");
+            redirectAttributes.addFlashAttribute("demmessage", "This supervisor is still assigned to a team");
+            return "redirect:/admin/s";
+        }
+        supervisor.setSupervisor(false);
+        userRepository.save(supervisor);
+
+        redirectAttributes.addFlashAttribute("demstatus", "success");
+        redirectAttributes.addFlashAttribute("demmessage", String.format("The supervisor %s has been demoted to employee", supervisor.getName()));
+        return "redirect:/admin/s";
     }
 
     @PostMapping("/s/create")
