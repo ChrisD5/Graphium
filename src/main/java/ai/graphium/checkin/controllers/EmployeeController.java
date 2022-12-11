@@ -1,25 +1,34 @@
 package ai.graphium.checkin.controllers;
 
+import ai.graphium.checkin.data.AvailableTime;
 import ai.graphium.checkin.entity.Alert;
 import ai.graphium.checkin.entity.CheckIn;
+import ai.graphium.checkin.entity.Meeting;
 import ai.graphium.checkin.entity.Note;
 import ai.graphium.checkin.enums.AlertType;
 import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.CheckinSubmission;
 import ai.graphium.checkin.forms.EditEmployeeForm;
-import ai.graphium.checkin.repos.AlertRepository;
-import ai.graphium.checkin.repos.CheckInRepository;
-import ai.graphium.checkin.repos.NoteRepository;
-import ai.graphium.checkin.repos.UserRepository;
+import ai.graphium.checkin.repos.*;
 import ai.graphium.checkin.services.AlertService;
 import ai.graphium.checkin.services.EmployeeService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.samstevens.totp.code.CodeVerifier;
 import dev.samstevens.totp.exceptions.QrGenerationException;
 import dev.samstevens.totp.qr.QrDataFactory;
 import dev.samstevens.totp.qr.QrGenerator;
 import dev.samstevens.totp.secret.SecretGenerator;
 import lombok.AllArgsConstructor;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VFreeBusy;
+import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.property.FreeBusy;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -30,8 +39,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Comparator;
+import java.net.URL;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/e")
@@ -44,6 +55,8 @@ public class EmployeeController {
     private final QrGenerator qrGenerator;
     private final QrDataFactory qrDataFactory;
     private final CodeVerifier codeVerifier;
+    private final ObjectMapper objectMapper;
+    private final MeetingRepository meetingRepository;
     private UserRepository userRepository;
     private EmployeeService employeeService;
     private NoteRepository noteRepository;
@@ -163,8 +176,112 @@ public class EmployeeController {
     }
 
     @GetMapping("/meeting")
-    public String employeeMeetingController() {
+    public String employeeMeetingController(Model model, Authentication authentication) throws IOException, ParserException {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var supervisor = user.getTeam().getSupervisor();
+
+        assert supervisor != null;
+
+        String icalUrl = supervisor.getIcalUrl();
+
+        var availableTimes = getAvailableTimes(icalUrl);
+
+        model.addAttribute("availableTimes",
+                objectMapper.writeValueAsString(availableTimes)
+        );
+
         return "employee/schedule-meeting";
+    }
+
+    @PostMapping("/schedule")
+    public String employeeMeetingController(@RequestParam("time") long start, Authentication authentication, RedirectAttributes atts) throws IOException, ParserException {
+        var user = userRepository.findByEmail(authentication.getName());
+        var supervisor = user.getTeam().getSupervisor();
+
+        assert supervisor != null;
+
+        var availableTimes = getAvailableTimes(supervisor.getIcalUrl());
+
+        for (var availableTime : availableTimes) {
+            if (start >= availableTime.getStart() && start <= availableTime.getEnd() - TimeUnit.MINUTES.toMillis(30)) {
+                var meeting = new Meeting(start, user, supervisor, "https://meet.jit.si/" + UUID.randomUUID());
+                meetingRepository.save(meeting);
+                atts.addFlashAttribute("message", "Successfully scheduled meeting!");
+                return "redirect:/e/meeting";
+            }
+        }
+
+        atts.addFlashAttribute("error", "Invalid time selected");
+
+        return "redirect:/e/meeting";
+    }
+
+    private List<AvailableTime> getAvailableTimes(String icalUrl) throws IOException, ParserException {
+        List<AvailableTime> availableTimes = new ArrayList<>();
+
+        if (icalUrl == null) {
+            // assume that supervisor is always free
+            for (int i = 0; i < 14; i++) {
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DATE, i);
+                var dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+                if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+                    // skip weekends
+                    continue;
+                }
+
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+
+                cal.set(Calendar.HOUR_OF_DAY, 9);
+                long start = cal.getTimeInMillis();
+
+                cal.set(Calendar.HOUR_OF_DAY, 17);
+                long end = cal.getTimeInMillis();
+
+                availableTimes.add(new AvailableTime(start, end));
+            }
+        } else {
+            var calendar = new CalendarBuilder().build(new URL(icalUrl).openStream());
+            // find all mondays to fridays in the next
+            // 2 weeks
+
+            // loop through each day from now to 2 weeks from now
+            for (int i = 0; i < 14; i++) {
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DATE, i);
+                var dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+                if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+                    // skip weekends
+                    continue;
+                }
+
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+
+                cal.set(Calendar.HOUR_OF_DAY, 9);
+                var start = cal.getTime();
+                cal.set(Calendar.HOUR_OF_DAY, 17);
+                var end = cal.getTime();
+                var request = new VFreeBusy(new DateTime(start), new DateTime(end), Duration.ofMinutes(30));
+                ComponentList<CalendarComponent> busyTimes = new ComponentList<>();
+                busyTimes.addAll(calendar.getComponents());
+                var response = new VFreeBusy(request, busyTimes);
+                var freeBusy = (FreeBusy) response.getProperty("FREEBUSY");
+                boolean isFree = freeBusy.getParameter(Parameter.FBTYPE) == FbType.FREE;
+                if (isFree) {
+                    freeBusy.getPeriods().forEach(period -> {
+                        System.out.println(new Date(period.getStart().getTime()) + " - " + new Date(period.getEnd().getTime()));
+                        availableTimes.add(new AvailableTime(period.getStart().getTime(), period.getEnd().getTime()));
+                    });
+                }
+            }
+        }
+
+        return availableTimes;
     }
 
     @GetMapping("/profile")
