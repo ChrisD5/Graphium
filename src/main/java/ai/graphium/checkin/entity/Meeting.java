@@ -1,12 +1,16 @@
 package ai.graphium.checkin.entity;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @NoArgsConstructor
 @Entity
 @Table(name = "meeting")
+@Getter
+@Setter
 public class Meeting {
 
     @Id

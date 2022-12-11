@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Meetings | Supervisor Portal')"/>
+<body class="bg-nord-0">
+
+<div class="container mx-auto">
+    <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Meetings</h2>
+        <!-- Meeting requests -->
+        <table class="border-collapse w-full">
+            <thead>
+            <tr>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Time</th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Meeting Link</th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">
+                    Accept/Reschedule
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="meeting : ${meetings}">
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span th:text="${#dates.format(meeting.time)}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <a class="hover:underline" th:href="${meeting.link}" th:text="${meeting.link}"></a>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <div th:unless="${meeting.confirmed}">
+                        <form th:action="@{/s/meetings/accept}" th:method="post">
+                            <input name="id" th:value="${meeting.id}" type="hidden"/>
+                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="submit">Approve
+                            </button>
+                        </form>
+                        <form onsubmit="return onSubmit()" th:action="@{/s/meetings/reschedule}"
+                              th:method="post">
+                            <input name="id" th:value="${meeting.id}" type="hidden"/>
+                            <label for="time">Reschedule to:</label>
+                            <input class="bg-nord-6 shadow appearance-none border rounded w-min py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
+                                   id="time"
+                                   type="datetime-local">
+                            <input name="time" type="hidden">
+                            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="submit">Reschedule
+                            </button>
+                        </form>
+                    </div>
+                    <span class="text-nord-14" th:if="${meeting.confirmed}">Confirmed</span>
+                </td>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+
+<script>
+    function onSubmit() {
+        const time = document.getElementById("time").value;
+        const today = new Date().getTime();
+        if (new Date(time).getTime() < today) {
+            alert("Please select a time in the future");
+            return false;
+        }
+        const date = new Date(time);
+        document.getElementsByName("time")[0].value = date.getTime();
+        return true;
+    }
+</script>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>
