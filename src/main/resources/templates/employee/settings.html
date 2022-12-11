@@ -5,33 +5,42 @@
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
-</div>
-
-<div class="container mx-auto">
-    <div class="flex justify-center">
-        <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
-            <div class="text-nord-4 text-lg font-bold mb-2 text-center">
-                <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Security</h2>
-                <a class="bg-nord-10 hover:bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                   href="/e/2fa">
-                    2FA Settings
-                </a>
+    <div class="container mx-auto">
+        <div class="flex justify-center">
+            <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
+                <div class="text-nord-4 text-lg font-bold mb-2 text-center">
+                    <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Security</h2>
+                    <a class="bg-nord-10 hover:bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                       href="/e/2fa">
+                        2FA Settings
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container mx-auto">
-    <div class="flex justify-center">
-        <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
-            <div class="text-nord-4 text-lg font-bold mb-2 text-center">
-                <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Alerts</h2>
-                <form method="post" th:action="@{/e/settings/alert/disable}"
-                      th:object="${IsAlertsDisabled}">
-                    <button class="bg-nord-10 hover:bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            th:text="${IsAlertsDisabled?'Enable':'Disable'}" type="submit">
-                    </button>
-                </form>
+    <div class="container mx-auto">
+        <div class="flex justify-center">
+            <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
+                <div class="text-nord-4 text-lg font-bold mb-2 text-center">
+                    <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Alerts</h2>
+                    <form method="post" th:action="@{/e/settings/alert/disable}">
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                th:text="${IsAlertsDisabled?'Enable':'Disable'}" type="submit">
+                        </button>
+                    </form>
+                    <form method="post" th:action="@{/e/settings/alert/reminder}" th:object="${remindertime}">
+                        <label class="block text-nord-4 text-md font-bold mb-2" for="time">
+                            Alert Reminders (Reminds based on hour)
+                        </label>
+                        <input class="shadow appearance-none border rounded max-w-1/2 py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
+                               id="time" type="time" th:value="*{stringTime}" name="stringTime" step="2">
+                        <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="submit">
+                            Save
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

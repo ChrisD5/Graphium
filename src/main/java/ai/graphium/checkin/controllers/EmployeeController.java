@@ -10,6 +10,7 @@ import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.CheckinSubmission;
 import ai.graphium.checkin.forms.EditEmployeeForm;
+import ai.graphium.checkin.forms.SetEmployeeReminderTime;
 import ai.graphium.checkin.repos.*;
 import ai.graphium.checkin.services.AlertService;
 import ai.graphium.checkin.services.EmployeeService;
@@ -40,6 +41,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Time;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -160,7 +162,7 @@ public class EmployeeController {
     public String employeeSettingsController(Model model, Authentication authentication) {
         var user = userRepository.findByEmail(authentication.getName());
         boolean IsAlertsDisabled = user.isSettingsAlertDisabled();
-
+        model.addAttribute("remindertime", new SetEmployeeReminderTime(user.getSettingsAlertReminder().toString()));
         model.addAttribute("IsAlertsDisabled", IsAlertsDisabled);
 
         return "employee/settings";
@@ -168,11 +170,18 @@ public class EmployeeController {
 
     @PostMapping("/settings/alert/disable")
     public String disableAlert(Authentication authentication) {
-
         var user = userRepository.findByEmail(authentication.getName());
         user.setSettingsAlertDisabled(!user.isSettingsAlertDisabled());
         userRepository.save(user);
+        return "redirect:/e/settings";
+    }
 
+    @PostMapping("/settings/alert/reminder")
+    public String setAlertReminder(Authentication authentication, @ModelAttribute SetEmployeeReminderTime setEmployeeReminderTime) {
+        var user = userRepository.findByEmail(authentication.getName());
+        Time time = Time.valueOf(setEmployeeReminderTime.getStringTime());
+        user.setSettingsAlertReminder(time);
+        userRepository.save(user);
         return "redirect:/e/settings";
     }
 
