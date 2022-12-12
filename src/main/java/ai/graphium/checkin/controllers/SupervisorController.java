@@ -64,9 +64,13 @@ public class SupervisorController {
                 sq.select(checkInRoot.get("id"));
                 sq.where(cb.equal(userRoot.get("id"), emp.getId()));
 
+                long time = System.currentTimeMillis();
+                time -= time % TimeUnit.DAYS.toMillis(1);
+                time -= TimeUnit.DAYS.toMillis(7);
+
                 cq.where(cb.and(
                         root.get("id").in(sq),
-                        cb.gt(root.get("time"), System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8))
+                        cb.gt(root.get("time"), time)
                 ));
             }
             cq.orderBy(cb.desc(root.get("time")));
