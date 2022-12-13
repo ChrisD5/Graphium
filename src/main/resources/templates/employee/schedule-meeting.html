@@ -1,131 +1,96 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header('Settings | Employee Check-In Portal')"/>
+<head th:replace="fragments/header :: header('Test | Employee Check-In Portal')"/>
 <body class="bg-nord-0">
 
 <div class="container mx-auto">
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
-
     <input hidden name="availableTimes" th:value="${availableTimes}">
-
-    <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" onsubmit="return onSubmit()"
-          th:action="@{/e/schedule}">
-        <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Schedule a Meeting</h2>
-
-        <!-- Flash message for error -->
-        <div class="flex justify-center" th:if="${error}">
-            <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
-                <span th:text="${error}"></span>
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Your Supervisor's Schedule</label>
+        <div class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" id="calender"></div>
+    </div>
+    <div class="flex flex-col gap-4 mx-8 my-10" id="schedule">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Schedule a Meeting</label>
+        <form method="post" class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" th:action="@{/e/schedule}" onsubmit="return onSubmit()">
+            <p class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+               th:classappend="${status == 'error' ? 'bg-nord-11' : 'bg-nord-14'}" th:if="${status}"
+               th:text="${status == 'error' ? 'Error: ' + message : 'Success: ' + message}">
+                Error Creating Employee
+            </p>
+            <div class="mb-4">
+                <!-- Date -->
+                <label class="block text-nord-4 text-md font-bold mb-2" for="date">
+                    Date
+                </label>
+                <input class="bg-nord-6 shadow appearance-none border rounded w-min py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
+                       id="date"
+                       placeholder="Date"
+                       type="date">
+                <!-- Time picker-->
+                <label class="block text text-nord-4 text-md font-bold mb-2" for="time">
+                    Time
+                </label>
+                <input class="bg-nord-6 shadow appearance-none border rounded w-min py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
+                       id="time" max="17:00"
+                       min="09:00"
+                       type="time">
+                <input name="time" type="hidden">
+                <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                    Schedule Meeting
+                </button>
             </div>
-        </div>
-
-        <!-- Flash message for success -->
-        <div class="flex justify-center" th:if="${message}">
-            <div class="bg-nord-14 rounded m-2 p-2 text-nord-0 text-s italic text-center w-1/2">
-                <span th:text="${message}"></span>
-            </div>
-        </div>
-
-        <div>
-            <!-- Available times -->
-            <label class="block text-nord-4 text-md font-bold mb-2" for="time">
-                Available Times
-            </label>
-            <table class="border-collapse w-full">
-                <thead>
-                <tr>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Date</th>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Day</th>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Start
-                        Time
-                    </th>
-                    <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">End Time
-                    </th>
-                </tr>
-                </thead>
-                <tbody id="tableBody">
-                </tbody>
-            </table>
-        </div>
-
-        <div class="mb-4">
-            <!-- Date -->
-            <label class="block text-nord-4 text-md font-bold mb-2" for="date">
-                Date
-            </label>
-            <input class="bg-nord-6 shadow appearance-none border rounded w-min py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
-                   id="date"
-                   placeholder="Date"
-                   type="date">
-            <!-- Time picker-->
-            <label class="block text text-nord-4 text-md font-bold mb-2" for="time">
-                Time
-            </label>
-            <input class="bg-nord-6 shadow appearance-none border rounded w-min py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
-                   id="time" max="17:00"
-                   min="09:00"
-                   type="time">
-            <input name="time" type="hidden">
-            <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit">
-                Schedule Meeting
-            </button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
-
 </body>
 
-<script>
-    function onSubmit() {
-        let date = document.getElementById("date").value;
-        let time = document.getElementById("time").value;
-        let availableTimes = document.querySelector("input[name='availableTimes']").value;
-        let availableTimesArray = JSON.parse(availableTimes);
-        let dateTime = date + " " + time;
-        let dateTimeObject = new Date(dateTime);
-        for (let i = 0; i < availableTimesArray.length; i++) {
-            const availableTime = availableTimesArray[i];
-            if (availableTime["start"] <= dateTimeObject.getTime() && availableTime["end"] >= dateTimeObject.getTime() - 30 * 60 * 1000) {
-                document.querySelector("input[name='time']").value = dateTimeObject.getTime();
-                return true;
+<footer>
+    <link rel="stylesheet" href="/css/calendar.css">
+    <script>
+
+        function onSubmit() {
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+            let availableTimes = document.querySelector("input[name='availableTimes']").value;
+            let availableTimesArray = JSON.parse(availableTimes);
+            let dateTime = date + " " + time;
+            let dateTimeObject = new Date(dateTime);
+            for (let i = 0; i < availableTimesArray.length; i++) {
+                const availableTime = availableTimesArray[i];
+                if (availableTime["start"] <= dateTimeObject.getTime() && availableTime["end"] >= dateTimeObject.getTime() - 30 * 60 * 1000) {
+                    document.querySelector("input[name='time']").value = dateTimeObject.getTime();
+                    return true;
+                }
             }
+            alert("Please select a time within the available times.");
+            return false;
         }
-        alert("Please select a time within the available times.");
-        return false;
-    }
 
-    const availableTimes = document.querySelector("input[name='availableTimes']").value;
-    const availableTimesArray = JSON.parse(availableTimes);
-    for (let i = 0; i < availableTimesArray.length; i++) {
-        const availableTime = availableTimesArray[i];
-        const start = new Date(availableTime["start"]);
-        const end = new Date(availableTime["end"]);
-        const startString = start.toLocaleTimeString();
-        const endString = end.toLocaleTimeString();
-        const date = start.toLocaleDateString();
-        const day = start.toLocaleString('en-us', {weekday: 'long'});
-        const row = document.createElement("tr");
-        row.classList.add("bg-nord-1", "lg:hover:bg-nord-2", "flex", "lg:table-row", "flex-row", "lg:flex-row", "flex-wrap", "lg:flex-no-wrap", "mb-10", "lg:mb-0");
-        const dateCell = document.createElement("td");
-        dateCell.classList.add("w-full", "lg:w-auto", "p-3", "text-nord-4", "text-center", "border-b", "text-center", "block", "lg:table-cell", "relative", "lg:static");
-        const dayCell = document.createElement("td");
-        dayCell.classList.add("w-full", "lg:w-auto", "p-3", "text-nord-4", "text-center", "border-b", "text-center", "block", "lg:table-cell", "relative", "lg:static");
-        const startCell = document.createElement("td");
-        startCell.classList.add("w-full", "lg:w-auto", "p-3", "text-nord-4", "text-center", "border-b", "text-center", "block", "lg:table-cell", "relative", "lg:static");
-        const endCell = document.createElement("td");
-        endCell.classList.add("w-full", "lg:w-auto", "p-3", "text-nord-4", "text-center", "border-b", "text-center", "block", "lg:table-cell", "relative", "lg:static");
-        dateCell.innerText = date;
-        dayCell.innerText = day;
-        startCell.innerText = startString;
-        endCell.innerText = endString;
-        row.appendChild(dateCell);
-        row.appendChild(dayCell);
-        row.appendChild(startCell);
-        row.appendChild(endCell);
-        document.querySelector("#tableBody").appendChild(row);
-    }
-</script>
-
+        const availableTimes = document.querySelector("input[name='availableTimes']").value;
+        const availableTimesArray = JSON.parse(availableTimes);
+        var calendar = new FullCalendar.Calendar(document.getElementById("calender"), {
+            height: "auto",
+            weekends: false,
+            initialView: 'timeGridWeek',
+            expandRows: false,
+            allDaySlot: false,
+            nowIndicator: true,
+            slotLabelInterval: {
+                minutes: 30
+            },
+            validRange: {
+                start: new Date(Date.now()),
+                end: new Date(Date.now() + 12096e5)
+            },
+            events: availableTimesArray.map((v) => {
+              return {"title": "Supervisor Busy", "groupId": "busy", "display": "inverse-background", start: v.start, end: v.end, classNames: ["!bg-nord-11", "!text-nord-6"] }}),
+            slotMinTime: "09:00:00",
+            slotMaxTime: "17:00:00"
+        });
+        calendar.render();
+    </script>
+</footer>
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>

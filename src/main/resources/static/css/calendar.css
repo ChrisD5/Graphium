@@ -1,0 +1,55 @@
+.fc .fc-toolbar-title {
+    font-weight: 500;
+    color: #ECEFF4;
+}
+
+.fc .fc-button {
+    background-color: #5E81AC !important;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+    color: #FFFFFFFF;
+    text-transform: capitalize !important;
+}
+
+.fc-day-disabled {
+    background: rgba(112, 112, 112, 0.49);
+}
+
+.fc-bg-event {
+    opacity: 1 !important;
+    border-radius: 1px;
+}
+
+.fc-event-past {
+    opacity: 0.8 !important;
+}
+
+.fc-day-today {
+    background-color: transparent !important;
+}
+
+.fc-day-other {
+    background: #FAFAFB;
+}
+
+.fc-col-header-cell-cushion {
+    color: #ECEFF4;
+    font-size: .85em !important;
+    line-height: 2.2rem !important;
+    font-weight: 600 !important;
+}
+
+.fc .fc-scrollgrid-section-sticky>* {
+    background: transparent !important;
+    position: static !important;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+    color: #ECEFF4;
+}
+
+.fc .fc-button-primary:disabled {
+    background-color: #3374b8 !important;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 1px 1px rgb(0 0 0 / 0.06));
+    color: #FFFFFFFF;
+    text-transform: capitalize !important;
+}

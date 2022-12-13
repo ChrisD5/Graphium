@@ -217,14 +217,16 @@ public class EmployeeController {
             if (start >= availableTime.getStart() && start <= availableTime.getEnd() - TimeUnit.MINUTES.toMillis(30)) {
                 var meeting = new Meeting(start, user, supervisor, "https://meet.jit.si/" + UUID.randomUUID());
                 meetingRepository.save(meeting);
+                atts.addFlashAttribute("status", "success");
                 atts.addFlashAttribute("message", "Successfully scheduled meeting!");
-                return "redirect:/e/meeting";
+                return "redirect:/e/meeting#schedule";
             }
         }
 
-        atts.addFlashAttribute("error", "Invalid time selected");
+        atts.addFlashAttribute("status", "error");
+        atts.addFlashAttribute("message", "Invalid time selected");
 
-        return "redirect:/e/meeting";
+        return "redirect:/e/meeting#schedule";
     }
 
     private List<AvailableTime> getAvailableTimes(String icalUrl) throws IOException, ParserException {
