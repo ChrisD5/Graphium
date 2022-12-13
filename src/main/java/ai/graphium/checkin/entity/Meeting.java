@@ -34,11 +34,15 @@ public class Meeting {
     @Column(name = "confirmed", nullable = false)
     private boolean confirmed;
 
+    @Column(name = "reminded", nullable = false)
+    private boolean reminded;
+
     public Meeting(long time, User requester, User requestee, String link) {
         this.time = time;
         this.requester = requester;
         this.requestee = requestee;
         this.link = link;
         this.confirmed = false;
+        this.reminded = false;
     }
 }
