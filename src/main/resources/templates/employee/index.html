@@ -3,10 +3,33 @@
 <head th:replace="fragments/header :: header('Home | Employee Check-In Portal')"/>
 <body class="bg-nord-0">
 
-<div un-cloak class="container mx-auto">
+<div class="container mx-auto" un-cloak>
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
     <div class="flex flex-col gap-4 mx-8 my-7" th:unless="${checkedIn}">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Employee Home</label>
+        <!-- Show upcoming meetings -->
+        <div class="flex flex-col gap-4 bg-nord-1 shadow-md rounded px-8 mb-4">
+            <label class="text-nord-4 font-semibold tracking-wider text-lg">Upcoming Meetings</label>
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-4" th:if="${upcomingMeetings.isEmpty()}">
+                    <label class="text-nord-4 font-semibold tracking-wider text-sm">No upcoming meetings</label>
+                </div>
+                <div class="flex flex-col gap-4 pb-2" th:each="meeting : ${upcomingMeetings}"
+                     th:if="${!upcomingMeetings.isEmpty()}">
+                    <div class="flex">
+                        <label class="text-nord-4 font-semibold tracking-wider text-sm">Meeting with
+                            <span th:text="${meeting.requestee.name}"></span>
+                        </label>
+                        <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5">on
+                            <span th:text="${#dates.format(meeting.time, 'dd/MM/yyyy')}"></span>
+                        </label>
+                        <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5">-
+                            <a class="hover:underline" th:href="${meeting.link}">Join Here</a>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/e/checkin}">
             <!-- Flash message for error -->
             <div class="flex justify-center" th:if="${error}">
@@ -124,12 +147,13 @@
 
                     <!-- Text area where they can give a reason why they gave such a rating. -->
                     <div class="mt-4">
-                        <label class="block text-nord-4 text-center text-md font-bold mb-2">
+                        <label class="block text-nord-4 text-center text-md font-bold mb-2" for="comment">
                             Comment
                         </label>
                         <div class="flex justify-center">
                         <textarea
                                 class="shadow appearance-none border rounded md:w-1/3 h-24 justify-center py-2 px-3 text-nord-0 bg-nord-5 leading-tight focus:outline-none focus:shadow-outline"
+                                id="comment"
                                 name="comment" placeholder="Optional comment"></textarea>
                         </div>
                     </div>
@@ -174,27 +198,28 @@
     <div class="flex flex-col gap-4 mx-8 my-7">
         <div>
             <label class="text-nord-4 font-semibold tracking-wider text-lg">Alerts</label>
-            <span class="rounded-3xl bg-nord-4 text-nord-0 text-xs px-1 align-top font-semibold" th:unless="${noUnreadAlerts}"
-                  th:text="${unreadCount}">
+            <span class="rounded-3xl bg-nord-4 text-nord-0 text-xs px-1 align-top font-semibold"
+                  th:text="${unreadCount}"
+                  th:unless="${noUnreadAlerts}">
             </span>
         </div>
         <div class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div th:if="${alerts.size() < 1}" class="bg-nord-0 text-nord-4 p-4 my-4 rounded text-center" role="alert">
+            <div class="bg-nord-0 text-nord-4 p-4 my-4 rounded text-center" role="alert" th:if="${alerts.size() < 1}">
                 <p class="text-nord-6 font-semibold">No alerts, check back later</p>
             </div>
-            <div th:classappend="${alert.readByTarget ? 'opacity-50' : ''}"
-                 class="bg-nord-0 relative border-l-4 border-orange-500 text-nord-4 p-4 my-4 rounded" role="alert"
+            <div class="bg-nord-0 relative border-l-4 border-orange-500 text-nord-4 p-4 my-4 rounded"
+                 role="alert" th:classappend="${alert.readByTarget ? 'opacity-50' : ''}"
                  th:each="alert : ${alerts}">
                 <p class="text-xs text-nord-6" th:text="${#dates.format(alert.created)}"></p>
                 <p class="font-bold" th:text="${alert.title}"></p>
                 <p th:text="${alert.targetMessage}"></p>
                 <form th:action="@{/e/alert/read}" th:method="post" th:unless="${alert.readByTarget}">
                     <label>
-                        <input class="hidden" type="submit" name="id" th:value="${alert.id}">
+                        <input class="hidden" name="id" th:value="${alert.id}" type="submit">
                         <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                        <svg un-cloak
-                             class="hover:bg-nord-2 cursor-pointer fill-current h-6 w-6 bg-nord-0 text-nord-4 rounded-lg"
-                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title>
+                        <svg class="hover:bg-nord-2 cursor-pointer fill-current h-6 w-6 bg-nord-0 text-nord-4 rounded-lg"
+                             un-cloak
+                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Close</title>
                             <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
                         </span>
                     </label>

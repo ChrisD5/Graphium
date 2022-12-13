@@ -75,11 +75,15 @@ public class EmployeeController {
         var alerts = allAlerts.stream().filter(alert -> alert.getVisibility().equals(AlertVisibility.EMPLOYEE) || alert.getVisibility().equals(AlertVisibility.ALL)).toList();
         boolean noUnreadAlerts = alerts.stream().allMatch(Alert::isReadByTarget);
         int unreadCount = (int) alerts.stream().filter(alert -> !alert.isReadByTarget()).count();
+        var upcomingMeetings = meetingRepository.findByRequester_EmailAndTimeGreaterThan(authentication.getName(),
+                System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1)
+        );
 
         model.addAttribute("checkedIn", hasCheckedInToday);
         model.addAttribute("noUnreadAlerts", noUnreadAlerts);
         model.addAttribute("unreadCount", unreadCount);
         model.addAttribute("alerts", alerts);
+        model.addAttribute("upcomingMeetings", upcomingMeetings);
 
         return "employee/index";
     }
