@@ -10,4 +10,5 @@ public interface MeetingRepository extends JpaRepository<Meeting, Long> {
     List<Meeting> findByRequester_EmailAndTimeGreaterThan(String email, long time);
 
     List<Meeting> findByRequestee(User requestee);
+    List<Meeting> findByRequesteeOrderByTimeDesc(User requestee);
 }

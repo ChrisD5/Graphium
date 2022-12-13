@@ -8,6 +8,20 @@
 
     <div class="flex flex-col gap-4 mx-8 my-10">
         <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Meetings</h2>
+
+        <!-- Flash message for success -->
+        <div class="flex justify-center" th:if="${message}">
+            <div class="bg-nord-14 rounded m-2 p-2 text-nord-0 text-s italic text-center w-1/2">
+                <span th:text="${message}"></span>
+            </div>
+        </div>
+        <!-- Flash message for error -->
+        <div class="flex justify-center" th:if="${error}">
+            <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
+                <span th:text="${error}"></span>
+            </div>
+        </div>
+
         <!-- Meeting requests -->
         <table class="border-collapse w-full">
             <thead>
@@ -26,6 +40,11 @@
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <a class="hover:underline" th:href="${meeting.link}" th:text="${meeting.link}"></a>
+                    <!-- Allow managing meeting notes -->
+                    <div class="justify-center" th:if="${meeting.confirmed}">
+                        <a class="hover:underline" th:href="'/s/meetings/' + ${meeting.id} + '/notes'">View Notes</a>
+                        <a class="hover:underline" th:href="'/s/meetings/' + ${meeting.id} + '/notes/add'">Add Notes</a>
+                    </div>
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <div th:unless="${meeting.confirmed}">
