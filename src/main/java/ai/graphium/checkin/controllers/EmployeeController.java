@@ -11,6 +11,7 @@ import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.CheckinSubmission;
 import ai.graphium.checkin.forms.EditEmployeeForm;
 import ai.graphium.checkin.forms.SetEmployeeReminderTime;
+import ai.graphium.checkin.forms.ToggleEmployeeAlertDayForm;
 import ai.graphium.checkin.repos.*;
 import ai.graphium.checkin.services.AlertService;
 import ai.graphium.checkin.services.EmployeeService;
@@ -162,9 +163,20 @@ public class EmployeeController {
     public String employeeSettingsController(Model model, Authentication authentication) {
         var user = userRepository.findByEmail(authentication.getName());
         boolean IsAlertsDisabled = user.isSettingsAlertDisabled();
+        Set<String> IsAlertsDayDisabled = user.getSettingsAlertDayDisabled();
+        if (model.getAttribute("toggleemployeealertdayform") == null) {
+            model.addAttribute("toggleemployeealertdayform", new ToggleEmployeeAlertDayForm());
+        }
         model.addAttribute("remindertime", new SetEmployeeReminderTime(user.getSettingsAlertReminder().toString()));
         model.addAttribute("IsAlertsDisabled", IsAlertsDisabled);
+        model.addAttribute("IsAlertsDayDisabled", IsAlertsDayDisabled);
 
+        System.out.println(IsAlertsDayDisabled.contains("MONDAY"));
+        model.addAttribute("monday", IsAlertsDayDisabled.contains("MONDAY"));
+        model.addAttribute("tuesday", IsAlertsDayDisabled.contains("TUESDAY"));
+        model.addAttribute("wednesday", IsAlertsDayDisabled.contains("WEDNESDAY"));
+        model.addAttribute("thursday", IsAlertsDayDisabled.contains("THURSDAY"));
+        model.addAttribute("friday", IsAlertsDayDisabled.contains("FRIDAY"));
         return "employee/settings";
     }
 
@@ -175,6 +187,22 @@ public class EmployeeController {
         userRepository.save(user);
         return "redirect:/e/settings";
     }
+
+    @PostMapping("/settings/alert/toggleday")
+    public String disableAlertDay(Authentication authentication, @ModelAttribute ToggleEmployeeAlertDayForm toggleEmployeeAlertDayForm) {
+        var user = userRepository.findByEmail(authentication.getName());
+
+        String day = toggleEmployeeAlertDayForm.getDay();
+        if (user.getSettingsAlertDayDisabled().contains(day)) {
+            user.getSettingsAlertDayDisabled().remove(day);
+        } else {
+            user.getSettingsAlertDayDisabled().add(day);
+        }
+
+        userRepository.save(user);
+        return "redirect:/e/settings";
+    }
+
 
     @PostMapping("/settings/alert/reminder")
     public String setAlertReminder(Authentication authentication, @ModelAttribute SetEmployeeReminderTime setEmployeeReminderTime) {

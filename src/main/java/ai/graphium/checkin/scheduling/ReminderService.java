@@ -13,7 +13,9 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.JoinType;
 import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -35,12 +37,35 @@ public class ReminderService {
         ));
         root.fetch("checkIns", JoinType.LEFT);
         root.fetch("team", JoinType.INNER).fetch("supervisor", JoinType.INNER);
+        root.fetch("SettingsAlertDayDisabled", JoinType.LEFT);
         cq.distinct(true);
         var users = em.createQuery(cq).getResultList();
         users.stream()
                 .filter(user -> {
                     var checkIns = user.getCheckIns();
                     var supervisor = user.getTeam().getSupervisor();
+                    var daysToDisable = user.getSettingsAlertDayDisabled()
+                            .stream().map(day -> {
+                                switch (day.toLowerCase()) {
+                                    case "monday":
+                                        return Calendar.MONDAY;
+                                    case "tuesday":
+                                        return Calendar.TUESDAY;
+                                    case "wednesday":
+                                        return Calendar.WEDNESDAY;
+                                    case "thursday":
+                                        return Calendar.THURSDAY;
+                                    case "friday":
+                                        return Calendar.FRIDAY;
+                                    default:
+                                        return -1;
+                                }
+                            }).collect(Collectors.toSet());
+
+                    if (daysToDisable.contains(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))) {
+                        return false;
+                    }
+
                     return !user.isSettingsAlertDisabled() && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > System.currentTimeMillis() - TimeUnit.DAYS.toMillis(supervisor.getSettingsAlertThreshold())));
                 })
                 .forEach(user -> {
@@ -71,6 +96,7 @@ public class ReminderService {
         ));
         root.fetch("checkIns", JoinType.LEFT);
         root.fetch("team", JoinType.INNER).fetch("supervisor", JoinType.INNER);
+        root.fetch("SettingsAlertDayDisabled", JoinType.LEFT);
         cq.distinct(true);
         var users = em.createQuery(cq).getResultList();
         users.stream()
@@ -80,6 +106,27 @@ public class ReminderService {
                     long timeLong = System.currentTimeMillis();
                     timeLong -= timeLong % TimeUnit.DAYS.toMillis(1);
                     final long timeToCheck = timeLong;
+                    var daysToDisable = user.getSettingsAlertDayDisabled()
+                            .stream().map(day -> {
+                                switch (day.toLowerCase()) {
+                                    case "monday":
+                                        return Calendar.MONDAY;
+                                    case "tuesday":
+                                        return Calendar.TUESDAY;
+                                    case "wednesday":
+                                        return Calendar.WEDNESDAY;
+                                    case "thursday":
+                                        return Calendar.THURSDAY;
+                                    case "friday":
+                                        return Calendar.FRIDAY;
+                                    default:
+                                        return -1;
+                                }
+                            }).collect(Collectors.toSet());
+
+                    if (daysToDisable.contains(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))) {
+                        return false;
+                    }
                     return !user.isSettingsAlertDisabled() && (time.getHour() == LocalTime.now().getHour()) && (checkIns.isEmpty() || checkIns.stream().noneMatch(checkIn -> checkIn.getTime() > timeToCheck));
                 })
                 .forEach(user -> {

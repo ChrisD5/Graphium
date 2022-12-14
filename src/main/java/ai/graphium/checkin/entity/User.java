@@ -67,6 +67,14 @@ public class User {
     private boolean SettingsAlertDisabled = false;
 
     @Column(nullable = false)
+    @ElementCollection
+    @CollectionTable(
+            name = "users_alerts_days_Disabled"
+    )
+    private Set<String> SettingsAlertDayDisabled = new HashSet<>();
+
+
+    @Column(nullable = false)
     private Time SettingsAlertReminder = Time.valueOf("13:00:00");
 
     @Column(name = "ical_url")

@@ -9,7 +9,7 @@
         <div class="flex justify-center">
             <div class="bg-nord-1 rounded m-2 p-2 text-nord-6 text-s text-center w-1/2">
                 <div class="text-nord-4 text-lg font-bold mb-2 text-center">
-                    <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Security</h2>
+                    <h2 class="text-nord-4 text-4xl font-bold mb-4 text-center">Security</h2>
                     <a class="bg-nord-10 hover:bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                        href="/e/2fa">
                         2FA Settings
@@ -29,12 +29,86 @@
                                 th:text="${IsAlertsDisabled?'Enable':'Disable'}" type="submit">
                         </button>
                     </form>
+                    <br>
+
+
+                    <table class="flex justify-center border-separate border-spacing-1">
+                        <tr class="my-2">
+                            <td class="shadow appearance-none border max-w-1/2 py-0.5 px-3 text-nord-1 bg-nord-6 focus:outline-none focus:shadow-outline">
+                                Monday
+                            </td>
+                            <td>
+                                <form method="post" th:action="@{/e/settings/alert/toggleday}">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            name="day" th:text="${monday==true?'Enable':'Disable'}"
+                                            type="submit" value="MONDAY">
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr class="my-2">
+                            <td class="shadow appearance-none border max-w-1/2 py-0.5 px-3 text-nord-1 bg-nord-6 focus:outline-none focus:shadow-outline">
+                                Tuesday
+                            </td>
+                            <td>
+                                <form method="post" th:action="@{/e/settings/alert/toggleday}">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            name="day" th:text="${tuesday==true?'Enable':'Disable'}"
+                                            type="submit" value="TUESDAY">
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr class="my-2">
+                            <td class="shadow appearance-none border max-w-1/2 py-0.5 px-3 text-nord-1 bg-nord-6 focus:outline-none focus:shadow-outline">
+                                Wednesday
+                            </td>
+                            <td>
+                                <form method="post" th:action="@{/e/settings/alert/toggleday}">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            name="day" th:text="${wednesday==true?'Enable':'Disable'}"
+                                            type="submit" value="WEDNESDAY">
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr class="my-2">
+                            <td class="shadow appearance-none border max-w-1/2 py-0.5 px-3 text-nord-1 bg-nord-6 focus:outline-none focus:shadow-outline">
+                                Thursday
+                            </td>
+                            <td>
+                                <form method="post" th:action="@{/e/settings/alert/toggleday}">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            name="day" th:text="${thursday==true?'Enable':'Disable'}"
+                                            type="submit" value="THURSDAY">
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr class="my-2">
+                            <td class="shadow appearance-none border max-w-1/2 py-0.5 px-3 text-nord-1 bg-nord-6 focus:outline-none focus:shadow-outline">
+                                Friday
+                            </td>
+                            <td>
+                                <form method="post" th:action="@{/e/settings/alert/toggleday}">
+                                    <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                            name="day" th:text="${friday==true?'Enable':'Disable'}"
+                                            type="submit" value="FRIDAY">
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                    </table>
+
+
+                    <br>
                     <form method="post" th:action="@{/e/settings/alert/reminder}" th:object="${remindertime}">
                         <label class="block text-nord-4 text-md font-bold mb-2" for="time">
                             Alert Reminders (Reminds based on hour)
                         </label>
                         <input class="shadow appearance-none border rounded max-w-1/2 py-2 px-3 text-nord-1 bg-nord-6 leading-tight focus:outline-none focus:shadow-outline"
-                               id="time" type="time" th:value="*{stringTime}" name="stringTime" step="2">
+                               id="time" name="stringTime" step="2" th:value="*{stringTime}" type="time">
                         <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="submit">
                             Save
