@@ -1,6 +1,7 @@
 package ai.graphium.checkin.controllers;
 
 import ai.graphium.checkin.entity.*;
+import ai.graphium.checkin.entity.joins.EmployeeJoinCheckIn;
 import ai.graphium.checkin.enums.AlertVisibility;
 import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.SetSupervisorAlertThresholdForm;
