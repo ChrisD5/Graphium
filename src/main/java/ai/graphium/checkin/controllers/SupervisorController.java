@@ -211,6 +211,27 @@ public class SupervisorController {
         return "supervisor/notes/add";
     }
 
+    @GetMapping("meetings/{id}/notes")
+    public String viewMeetingNotes(@PathVariable("id") long id, Model model, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(id);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequestee().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        model.addAttribute("meeting", meeting);
+
+        return "supervisor/notes/view";
+    }
+
     @PostMapping("meetings/notes/add")
     public String addMeetingNotes(@RequestParam("meetingId") long meetingId, @RequestParam("content") String content, RedirectAttributes redirectAttributes, Authentication authentication) {
 
