@@ -221,6 +221,9 @@ public class EmployeeController {
     public String employeeMeetingController(Model model, Authentication authentication) throws IOException, ParserException {
 
         var user = userRepository.findByEmail(authentication.getName());
+        if (user.getTeam() == null) {
+            return "redirect:/e";
+        }
         var supervisor = user.getTeam().getSupervisor();
 
         assert supervisor != null;
