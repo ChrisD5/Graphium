@@ -7,15 +7,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SupervisorJoinTeam {
-
+public class EmployeeJoinCheckIn {
     private long id;
     private boolean disabled;
     private String name;
     private String teamname;
     private Double avgrating = Double.valueOf(0);
 
-    public SupervisorJoinTeam(long id, String name, boolean disabled) {
+    public EmployeeJoinCheckIn(long id, String name, boolean disabled) {
         this.id = id;
         this.name = name;
         this.disabled = disabled;

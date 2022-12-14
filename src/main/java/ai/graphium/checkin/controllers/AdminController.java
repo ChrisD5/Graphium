@@ -1,10 +1,14 @@
 package ai.graphium.checkin.controllers;
 
+import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.entity.joins.EmployeeJoinCheckIn;
 import ai.graphium.checkin.entity.joins.SupervisorJoinTeam;
+import ai.graphium.checkin.entity.joins.TeamJoinCheckIn;
 import ai.graphium.checkin.enums.UserType;
 import ai.graphium.checkin.forms.*;
+import ai.graphium.checkin.repos.CheckInRepository;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import lombok.AllArgsConstructor;
@@ -15,9 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.JoinType;
+import java.util.*;
 
 @AllArgsConstructor
 @Controller
@@ -27,10 +31,44 @@ public class AdminController {
 
     private UserRepository userRepository;
     private TeamRepository teamRepository;
+    private CheckInRepository checkInRepository;
     private PasswordEncoder passwordEncoder;
 
+    private EntityManager entityManager;
+
     @GetMapping("")
-    public String adminHomeController() {
+    public String adminHomeController(Model model) {
+        model.addAttribute("employeesCount", userRepository.countAllByEmployeeIsTrueAndSupervisorIsFalse());
+        model.addAttribute("supervisorsCount", userRepository.countAllBySupervisorIsTrue());
+        Double avgrating = entityManager.createQuery("SELECT AVG(e.rating) FROM CheckIn e", Double.class).getSingleResult();
+        model.addAttribute("avgrating", Math.round(avgrating * 100.0) / 100.0);
+        List<User> supervisors = userRepository.findAllBySupervisor(true);
+        List<SupervisorJoinTeam> supervisorsList = new ArrayList<>();
+        for (User supervisor : supervisors) {
+            Team team = teamRepository.findBySupervisor(supervisor);
+            SupervisorJoinTeam supervisorL = new SupervisorJoinTeam(supervisor.getId(), supervisor.getName(), supervisor.isDisabled());
+            if (team != null) {
+                var cb = entityManager.getCriteriaBuilder();
+                var cq = cb.createQuery(Double.class);
+                var root = cq.from(User.class);
+                var checkinsroot = root.join("checkIns", JoinType.LEFT);
+                cq.select(cb.avg(checkinsroot.get("rating")));
+                cq.where(cb.and(
+                        cb.isTrue(root.get("employee")),
+                        cb.equal(root.get("team"), team.getId())));
+                cq.distinct(true);
+                var rating = entityManager.createQuery(cq).getSingleResult();
+                if (rating == null) rating = Double.valueOf(0);
+                supervisorL.setAvgrating(Math.round(rating * 100.0) / 100.0);
+                supervisorL.setTeamname(team.getName());
+            } else {
+                supervisorL.setTeamname("N/A");
+            }
+            supervisorsList.add(supervisorL);
+        }
+        supervisorsList.sort(Comparator.comparing(SupervisorJoinTeam::getAvgrating));
+        supervisorsList.sort(Comparator.comparing(SupervisorJoinTeam::getName));
+        model.addAttribute("supervisors", supervisorsList);
         return "admin/index";
     }
 
@@ -42,10 +80,35 @@ public class AdminController {
         if (model.getAttribute("promoteemployeetosupervisor") == null) {
             model.addAttribute("promoteemployeetosupervisor", new PromoteEmployeeToSupervisorForm());
         }
-        Collection<User> employees = userRepository.findByEmployeeAndSupervisorIsFalse(true);
+        List<User> employees = userRepository.findByEmployeeAndSupervisorIsFalse(true);
+        List<EmployeeJoinCheckIn> employeesList = new ArrayList<>();
+        for (User emp : employees) {
+            Team team = emp.getTeam();
+            EmployeeJoinCheckIn employeeJoinCheckIn = new EmployeeJoinCheckIn(emp.getId(), emp.getName(), emp.isDisabled());
+            if (team != null) {
+                var cb = entityManager.getCriteriaBuilder();
+                var cq = cb.createQuery(Double.class);
+                var root = cq.from(User.class);
+                var checkinsroot = root.join("checkIns", JoinType.LEFT);
+                cq.select(cb.avg(checkinsroot.get("rating")));
+                cq.where(cb.and(
+                        cb.isTrue(root.get("employee")),
+                        cb.equal(root.get("id"), emp.getId())));
+                cq.distinct(true);
+                var rating = entityManager.createQuery(cq).getSingleResult();
+                if (rating == null) rating = Double.valueOf(0);
+                employeeJoinCheckIn.setAvgrating(Math.round(rating * 100.0) / 100.0);
+                employeeJoinCheckIn.setTeamname(team.getName());
+            } else {
+                employeeJoinCheckIn.setTeamname("N/A");
+            }
+            employeesList.add(employeeJoinCheckIn);
+        }
+        employeesList.sort(Comparator.comparing(EmployeeJoinCheckIn::getAvgrating));
+        employeesList.sort(Comparator.comparing(EmployeeJoinCheckIn::getName));
+        model.addAttribute("employees", employeesList);
         List<Team> teams = teamRepository.findAll();
         model.addAttribute("teams", teams);
-        model.addAttribute("employees", employees);
         return "admin/manage-employees";
     }
 
@@ -136,6 +199,18 @@ public class AdminController {
             SupervisorJoinTeam supervisorJoinTeam = new SupervisorJoinTeam(u.getId(), u.getName(), u.isDisabled());
             Team findTeam = teamRepository.findBySupervisor(u);
             if (findTeam != null) {
+                var cb = entityManager.getCriteriaBuilder();
+                var cq = cb.createQuery(Double.class);
+                var root = cq.from(User.class);
+                var checkinsroot = root.join("checkIns", JoinType.LEFT);
+                cq.select(cb.avg(checkinsroot.get("rating")));
+                cq.where(cb.and(
+                        cb.isTrue(root.get("employee")),
+                        cb.equal(root.get("team"), findTeam.getId())));
+                cq.distinct(true);
+                var rating = entityManager.createQuery(cq).getSingleResult();
+                if (rating == null) rating = Double.valueOf(0);
+                supervisorJoinTeam.setAvgrating(Math.round(rating * 100.0) / 100.0);
                 supervisorJoinTeam.setTeamname(findTeam.getName());
             } else {
                 supervisorJoinTeam.setTeamname("N/A");
@@ -238,8 +313,28 @@ public class AdminController {
             }
         }
         List<Team> teams = teamRepository.findAll();
+        List<TeamJoinCheckIn> teamsList = new ArrayList<>();
+        for (Team team : teams) {
+            User supervisor = team.getSupervisor();
+            TeamJoinCheckIn teamL = new TeamJoinCheckIn(team.getId(), supervisor != null ? supervisor.getName() : "N/A", team.getName());
+            var cb = entityManager.getCriteriaBuilder();
+            var cq = cb.createQuery(Double.class);
+            var root = cq.from(User.class);
+            var checkinsroot = root.join("checkIns", JoinType.LEFT);
+            cq.select(cb.avg(checkinsroot.get("rating")));
+            cq.where(cb.and(
+                    cb.isTrue(root.get("employee")),
+                    cb.equal(root.get("team"), team.getId())));
+            cq.distinct(true);
+            var rating = entityManager.createQuery(cq).getSingleResult();
+            if (rating == null) rating = Double.valueOf(0);
+            teamL.setAvgrating(Math.round(rating * 100.0) / 100.0);
+            teamsList.add(teamL);
+        }
+        teamsList.sort(Comparator.comparing(TeamJoinCheckIn::getAvgrating));
+        teamsList.sort(Comparator.comparing(TeamJoinCheckIn::getName));
+        model.addAttribute("teams", teamsList);
         List<User> employees = userRepository.findAllByEmployeeAndSupervisorAndAdmin(true, false, false);
-        model.addAttribute("teams", teams);
         model.addAttribute("employees", employees);
         model.addAttribute("unassigned_supervisors", unassignedSupervisors);
         return "admin/manage-teams";
