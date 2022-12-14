@@ -1,6 +1,5 @@
 package ai.graphium.checkin.controllers;
 
-import ai.graphium.checkin.entity.CheckIn;
 import ai.graphium.checkin.entity.Team;
 import ai.graphium.checkin.entity.User;
 import ai.graphium.checkin.entity.joins.EmployeeJoinCheckIn;
@@ -21,7 +20,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.JoinType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 @AllArgsConstructor
 @Controller
@@ -66,7 +68,6 @@ public class AdminController {
             supervisorsList.add(supervisorL);
         }
         supervisorsList.sort(Comparator.comparing(SupervisorJoinTeam::getAvgrating));
-        supervisorsList.sort(Comparator.comparing(SupervisorJoinTeam::getName));
         model.addAttribute("supervisors", supervisorsList);
         return "admin/index";
     }
@@ -104,7 +105,6 @@ public class AdminController {
             employeesList.add(employeeJoinCheckIn);
         }
         employeesList.sort(Comparator.comparing(EmployeeJoinCheckIn::getAvgrating));
-        employeesList.sort(Comparator.comparing(EmployeeJoinCheckIn::getName));
         model.addAttribute("employees", employeesList);
         List<Team> teams = teamRepository.findAll();
         model.addAttribute("teams", teams);
@@ -331,7 +331,6 @@ public class AdminController {
             teamsList.add(teamL);
         }
         teamsList.sort(Comparator.comparing(TeamJoinCheckIn::getAvgrating));
-        teamsList.sort(Comparator.comparing(TeamJoinCheckIn::getName));
         model.addAttribute("teams", teamsList);
         List<User> employees = userRepository.findAllByEmployeeAndSupervisorAndAdmin(true, false, false);
         model.addAttribute("employees", employees);
