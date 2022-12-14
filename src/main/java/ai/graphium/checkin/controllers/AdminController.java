@@ -31,7 +31,6 @@ public class AdminController {
 
     private UserRepository userRepository;
     private TeamRepository teamRepository;
-    private CheckInRepository checkInRepository;
     private PasswordEncoder passwordEncoder;
 
     private EntityManager entityManager;

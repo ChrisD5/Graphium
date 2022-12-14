@@ -24,7 +24,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Collection<User> findBySupervisorIsTrue();
 
-    Collection<User> findByTeamIdAndSupervisorIsFalse(long teamId);
+    List<User> findByTeamIdAndSupervisorIsFalseAndEmployeeIsTrue(long teamId);
 
     int countAllByEmployeeIsTrueAndSupervisorIsFalse();
 
