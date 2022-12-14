@@ -1,15 +1,10 @@
 package ai.graphium.checkin.controllers;
 
-import ai.graphium.checkin.entity.Alert;
-import ai.graphium.checkin.entity.CheckIn;
-import ai.graphium.checkin.entity.Team;
-import ai.graphium.checkin.entity.User;
+import ai.graphium.checkin.entity.*;
 import ai.graphium.checkin.enums.AlertVisibility;
+import ai.graphium.checkin.enums.NoteType;
 import ai.graphium.checkin.forms.SetSupervisorAlertThresholdForm;
-import ai.graphium.checkin.repos.AlertRepository;
-import ai.graphium.checkin.repos.MeetingRepository;
-import ai.graphium.checkin.repos.TeamRepository;
-import ai.graphium.checkin.repos.UserRepository;
+import ai.graphium.checkin.repos.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
@@ -36,6 +31,7 @@ public class SupervisorController {
 
     private final AlertRepository alertRepository;
     private final MeetingRepository meetingRepository;
+    private final NoteRepository noteRepository;
     private UserRepository userRepository;
     private TeamRepository teamRepository;
     private EntityManager em;
@@ -125,7 +121,7 @@ public class SupervisorController {
     public String meetings(Model model, Authentication authentication) {
 
         var user = userRepository.findByEmail(authentication.getName());
-        var meetings = meetingRepository.findByRequestee(user);
+        var meetings = meetingRepository.findByRequesteeOrderByTimeDesc(user);
 
         model.addAttribute("meetings", meetings);
 
@@ -190,6 +186,78 @@ public class SupervisorController {
         meeting.setConfirmed(true);
 
         meetingRepository.save(meeting);
+
+        return "redirect:/s/meetings";
+    }
+
+    @GetMapping("meetings/{id}/notes/add")
+    public String addMeetingNotes(@PathVariable("id") long id, Model model, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(id);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequestee().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        model.addAttribute("meeting", meeting);
+
+        return "supervisor/notes/add";
+    }
+
+    @GetMapping("meetings/{id}/notes")
+    public String viewMeetingNotes(@PathVariable("id") long id, Model model, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(id);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequestee().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        model.addAttribute("meeting", meeting);
+
+        return "supervisor/notes/view";
+    }
+
+    @PostMapping("meetings/notes/add")
+    public String addMeetingNotes(@RequestParam("meetingId") long meetingId, @RequestParam("content") String content, RedirectAttributes redirectAttributes, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(meetingId);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequestee().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        var note = noteRepository.save(new Note(
+                content,
+                NoteType.MEETING
+        ));
+
+        meeting.getNotes().add(note);
+
+        meetingRepository.save(meeting);
+
+        redirectAttributes.addFlashAttribute("message", "Meeting notes added successfully");
 
         return "redirect:/s/meetings";
     }

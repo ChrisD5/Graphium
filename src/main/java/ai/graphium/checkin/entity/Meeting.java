@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @NoArgsConstructor
 @Entity
@@ -36,6 +37,13 @@ public class Meeting {
 
     @Column(name = "reminded", nullable = false)
     private boolean reminded;
+
+    @SuppressWarnings("JpaAttributeTypeInspection")
+    @ElementCollection
+    @CollectionTable(
+            name = "meeting_notes"
+    )
+    private Set<Note> notes;
 
     public Meeting(long time, User requester, User requestee, String link) {
         this.time = time;

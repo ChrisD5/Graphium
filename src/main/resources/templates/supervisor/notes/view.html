@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('View Meeting Notes | Supervisor Portal')"/>
+<body class="bg-nord-0">
+
+<div class="container mx-auto">
+  <div th:replace="fragments/navbars/supervisor-navbar :: navbar"/>
+</div>
+
+<div class="flex flex-col gap-4 mx-8 my-10">
+  <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">View Meeting Notes</h2>
+
+  <div class="flex justify-center w-full">
+    <div class="w-full max-w-2xl m-0">
+      <div class="flex flex-col gap-4">
+        <span class="text-nord-4"
+              th:text="'Notes for meeting with ' + ${meeting.requester.name} + ' at ' + ${#dates.format(meeting.time)}"/>
+        <div th:each="note : ${meeting.notes}">
+          <div class="bg-nord-6 shadow appearance-none border rounded w-full py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline">
+            <span th:text="${note.text}"/>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+<footer th:replace="fragments/footer :: footer">
+</footer>
+</html>
