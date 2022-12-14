@@ -7,29 +7,6 @@
     <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
     <div class="flex flex-col gap-4 mx-8 my-7" th:unless="${checkedIn}">
         <label class="text-nord-4 font-semibold tracking-wider text-lg">Employee Home</label>
-        <!-- Show upcoming meetings -->
-        <div class="flex flex-col gap-4 bg-nord-1 shadow-md rounded px-8 mb-4">
-            <label class="text-nord-4 font-semibold tracking-wider text-lg">Upcoming Meetings</label>
-            <div class="flex flex-col gap-4">
-                <div class="flex flex-col gap-4" th:if="${upcomingMeetings.isEmpty()}">
-                    <label class="text-nord-4 font-semibold tracking-wider text-sm">No upcoming meetings</label>
-                </div>
-                <div class="flex flex-col gap-4 pb-2" th:each="meeting : ${upcomingMeetings}"
-                     th:if="${!upcomingMeetings.isEmpty()}">
-                    <div class="flex">
-                        <label class="text-nord-4 font-semibold tracking-wider text-sm">Meeting with
-                            <span th:text="${meeting.requestee.name}"></span>
-                        </label>
-                        <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5">on
-                            <span th:text="${#dates.format(meeting.time, 'dd/MM/yyyy')}"></span>
-                        </label>
-                        <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5">-
-                            <a class="hover:underline" th:href="${meeting.link}">Join Here</a>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
         <form class="bg-nord-1 shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post" th:action="@{/e/checkin}">
             <!-- Flash message for error -->
             <div class="flex justify-center" th:if="${error}">
@@ -192,6 +169,31 @@
             </div>
             <div class="flex justify-center m-2">
                 <p class="text-nord-5 text-md">Come back tomorrow, to check in again.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Show upcoming meetings -->
+    <div class="flex flex-col gap-4 bg-nord-1 shadow-md rounded px-8 mb-4">
+        <label class="text-nord-4 font-semibold tracking-wider text-lg">Upcoming Meetings</label>
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4" th:if="${upcomingMeetings.isEmpty()}">
+                <label class="text-nord-4 font-semibold tracking-wider text-sm">No upcoming meetings</label>
+            </div>
+            <div class="flex flex-col gap-4 pb-2" th:each="meeting : ${upcomingMeetings}"
+                 th:if="${!upcomingMeetings.isEmpty()}">
+                <div class="flex">
+                    <label class="text-nord-4 font-semibold tracking-wider text-sm">Meeting with
+                        <span th:text="${meeting.requestee.name}"></span>
+                    </label>
+                    <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5">on
+                        <span th:text="${#dates.format(meeting.time, 'dd/MM/yyyy')}"></span>
+                    </label>
+                    <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5" th:if="${meeting.confirmed}">-
+                        <a class="hover:underline" th:href="${meeting.link}">Join Here</a>
+                    </label>
+                    <label class="text-nord-4 font-semibold tracking-wider text-sm pl-1.5"
+                           th:unless="${meeting.confirmed}">(Pending)</label>
+                </div>
             </div>
         </div>
     </div>
