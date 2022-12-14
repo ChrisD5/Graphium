@@ -414,4 +414,35 @@ public class EmployeeController {
 
         return "redirect:/e";
     }
+
+    @GetMapping("meetings")
+    public String meetings(Model model, Authentication authentication) {
+
+        var meetings = meetingRepository.findByRequester_EmailOrderByTimeDesc(authentication.getName());
+
+        model.addAttribute("meetings", meetings);
+
+        return "employee/view-meetings";
+    }
+
+    @GetMapping("meetings/{id}/notes")
+    public String viewMeetingNotes(@PathVariable("id") long id, Model model, Authentication authentication) {
+
+        var user = userRepository.findByEmail(authentication.getName());
+        var meetingOptional = meetingRepository.findById(id);
+
+        if (meetingOptional.isEmpty()) {
+            return "redirect:/s/meetings";
+        }
+
+        var meeting = meetingOptional.get();
+
+        if (meeting.getRequester().getId() != user.getId()) {
+            return "redirect:/s/meetings";
+        }
+
+        model.addAttribute("meeting", meeting);
+
+        return "employee/view-notes";
+    }
 }

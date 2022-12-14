@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header('Meetings History | Employee Portal')"/>
+<body class="bg-nord-0">
+
+<div class="container mx-auto">
+    <div th:replace="fragments/navbars/employee-navbar :: navbar"/>
+
+    <div class="flex flex-col gap-4 mx-8 my-10">
+        <h2 class="text-nord-4 text-4xl font-bold mb-2 text-center">Meetings History</h2>
+
+        <!-- Flash message for success -->
+        <div class="flex justify-center" th:if="${message}">
+            <div class="bg-nord-14 rounded m-2 p-2 text-nord-0 text-s italic text-center w-1/2">
+                <span th:text="${message}"></span>
+            </div>
+        </div>
+        <!-- Flash message for error -->
+        <div class="flex justify-center" th:if="${error}">
+            <div class="bg-nord-11 rounded m-2 p-2 text-nord-6 text-s italic text-center w-1/2">
+                <span th:text="${error}"></span>
+            </div>
+        </div>
+
+        <!-- Meeting requests -->
+        <table class="border-collapse w-full">
+            <thead>
+            <tr>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Time</th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">Requestee</th>
+                <th class="p-3 font-bold bg-nord-3 text-nord-4 border-gray-300 hidden lg:table-cell">View Notes</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="meeting : ${meetings}">
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span th:text="${#dates.format(meeting.time)}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <span th:text="${meeting.requestee.name}"></span>
+                </td>
+                <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
+                    <a class="bg-nord-4 hover:bg-nord-5 text-nord-0 font-bold py-2 px-4 rounded hover:underline"
+                       th:href="'/e/meetings/' + ${meeting.id} + '/notes'">
+                        View Notes
+                    </a>
+                </td>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>
