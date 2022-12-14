@@ -54,12 +54,11 @@
                                     type="submit">Approve
                             </button>
                         </form>
-                        <form onsubmit="return onSubmit()" th:action="@{/s/meetings/reschedule}"
+                        <form onsubmit="return onSubmit(event)" th:action="@{/s/meetings/reschedule}"
                               th:method="post">
                             <input name="id" th:value="${meeting.id}" type="hidden"/>
                             <label for="time">Reschedule to:</label>
                             <input class="bg-nord-6 shadow appearance-none border rounded w-min py-2 px-3 text-nord-1 leading-tight focus:outline-none focus:shadow-outline"
-                                   id="time"
                                    type="datetime-local">
                             <input name="time" type="hidden">
                             <button class="!bg-nord-10 hover:!bg-nord-9 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -77,15 +76,16 @@
 </body>
 
 <script>
-    function onSubmit() {
-        const time = document.getElementById("time").value;
+    function onSubmit(event) {
+        const form = event.target;
+        const time = form.querySelector('input[type="datetime-local"]').value;
         const today = new Date().getTime();
         if (new Date(time).getTime() < today) {
             alert("Please select a time in the future");
             return false;
         }
         const date = new Date(time);
-        document.getElementsByName("time")[0].value = date.getTime();
+        form.querySelector('input[name="time"]').value = date.getTime();
         return true;
     }
 </script>
