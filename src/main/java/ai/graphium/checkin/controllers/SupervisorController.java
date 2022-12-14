@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.JoinType;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +37,7 @@ public class SupervisorController {
     private TeamRepository teamRepository;
     private EntityManager em;
     private ObjectMapper objectMapper;
+    private EntityManager entityManager;
 
     @GetMapping("")
     public String supervisorHomeController(Model model, Authentication authentication) throws JsonProcessingException {
@@ -314,9 +316,34 @@ public class SupervisorController {
 
     @GetMapping("/employees")
     public String supervisorEmployeesController(Model model, Authentication authentication) {
-        Team team = teamRepository.findBySupervisorEmail(authentication.getName());
-        Collection<User> employees = userRepository.findByTeamIdAndSupervisorIsFalse(team.getId());
-        model.addAttribute("employees", employees);
+        Team supervisorteam = teamRepository.findBySupervisorEmail(authentication.getName());
+        List<User> employees = userRepository.findByTeamIdAndSupervisorIsFalseAndEmployeeIsTrue(supervisorteam.getId());
+        List<EmployeeJoinCheckIn> employeesList = new ArrayList<>();
+        for (User emp : employees) {
+            Team team = emp.getTeam();
+            EmployeeJoinCheckIn employeeJoinCheckIn = new EmployeeJoinCheckIn(emp.getId(), emp.getName(), emp.isDisabled());
+            if (team != null) {
+                var cb = entityManager.getCriteriaBuilder();
+                var cq = cb.createQuery(Double.class);
+                var root = cq.from(User.class);
+                var checkinsroot = root.join("checkIns", JoinType.LEFT);
+                cq.select(cb.avg(checkinsroot.get("rating")));
+                cq.where(cb.and(
+                        cb.isTrue(root.get("employee")),
+                        cb.equal(root.get("id"), emp.getId())));
+                cq.distinct(true);
+                var rating = entityManager.createQuery(cq).getSingleResult();
+                if (rating == null) rating = Double.valueOf(0);
+                employeeJoinCheckIn.setAvgrating(Math.round(rating * 100.0) / 100.0);
+                employeeJoinCheckIn.setTeamname(team.getName());
+            } else {
+                employeeJoinCheckIn.setTeamname("N/A");
+            }
+            employeesList.add(employeeJoinCheckIn);
+        }
+        employeesList.sort(Comparator.comparing(EmployeeJoinCheckIn::getAvgrating));
+        employeesList.sort(Comparator.comparing(EmployeeJoinCheckIn::getName));
+        model.addAttribute("employees", employeesList);
         return "supervisor/employees";
     }
 

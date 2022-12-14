@@ -20,12 +20,16 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     boolean existsById(long id);
 
-    Collection<User> findByEmployeeAndSupervisorIsFalse(Boolean is_employee);
+    List<User> findByEmployeeAndSupervisorIsFalse(Boolean is_employee);
 
     Collection<User> findBySupervisorIsTrue();
 
-    Collection<User> findByTeamIdAndSupervisorIsFalse(long teamId);
+    List<User> findByTeamIdAndSupervisorIsFalseAndEmployeeIsTrue(long teamId);
 
-    Collection<User> findFirst10BySupervisorIsTrue();
+    int countAllByEmployeeIsTrueAndSupervisorIsFalse();
+
+    int countAllBySupervisorIsTrue();
+
+    List<User> findAllBySupervisor(boolean supervisor);
 
 }

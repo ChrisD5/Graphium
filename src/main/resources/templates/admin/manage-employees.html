@@ -125,11 +125,13 @@
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Team</span>
-                    <span th:text="${emp?.team?.name}"></span>
+                    <span th:text="${emp?.teamname}"></span>
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Avg Well-being Score</span>
-                    <span class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6">2/10</span>
+                    <span th:if="${emp.avgrating > 7}" class="rounded bg-nord-14 py-1 px-3 text-xs font-bold text-nord-1" th:text="${emp.avgrating + '/10'}"></span>
+                    <span th:if="${emp.avgrating >= 4 && emp.avgrating <= 7 }" class="rounded bg-nord-13 py-1 px-3 text-xs font-bold text-nord-1" th:text="${emp.avgrating + '/10'}"></span>
+                    <span th:if="${emp.avgrating < 4}" class="rounded bg-nord-11 py-1 px-3 text-xs font-bold text-nord-6" th:text="${emp.avgrating + '/10'}"></span>
                 </td>
                 <td class="w-full lg:w-auto p-3 text-nord-4 text-center border-b text-center block lg:table-cell relative lg:static">
                     <span class="lg:hidden absolute top-0 left-0 bg-nord-3 px-2 py-1 text-xs font-bold uppercase">Action</span>
