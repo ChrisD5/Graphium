@@ -92,9 +92,23 @@ public class BootConfig {
                 emailSupervisor = new User("supervisor@kavin.rocks", passwordEncoder.encode("supervisor"), UserType.SUPERVISOR, "Supervisor", "+441234567890");
                 userRepository.save(emailSupervisor);
             }
+            var carlJones = userRepository
+                    .findByEmail("jonesc162@cardiff.ac.uk");
+            if (carlJones == null) {
+                carlJones = new User("jonesc162@cardiff.ac.uk", passwordEncoder.encode("frog"), UserType.EMPLOYEE, "Carl Jones", "+441234567890");
+                carlJones.setSupervisor(true);
+                userRepository.save(carlJones);
+            }
+            var jamesSmith = userRepository
+                    .findByEmail("jamessmith@graphium.ai");
+            if (jamesSmith == null) {
+                jamesSmith = new User("jamessmith@graphium.ai", passwordEncoder.encode("frog"), UserType.EMPLOYEE, "James Smith", "+441234567890");
+                userRepository.save(jamesSmith);
+            }
             var teams = teamRepository
                     .findAll();
             if (teams.size() < 2) {
+                teamRepository.deleteAll();
                 var team1 = new Team(andrewsharp, "Team Alpha");
 
                 emailEmployee.setTeam(team1);
@@ -104,6 +118,12 @@ public class BootConfig {
                 jeromeclacy.setTeam(team1);
                 alicehitchin.setTeam(team1);
                 teamRepository.save(team1);
+
+                carlJones.setTeam(team1);
+
+                var team2 = new Team(carlJones, "Team Beta");
+                teamRepository.save(team2);
+                jamesSmith.setTeam(team2);
             }
             userRepository.save(emailEmployee);
             userRepository.save(maxjones);
@@ -111,6 +131,8 @@ public class BootConfig {
             userRepository.save(pollysmith);
             userRepository.save(jeromeclacy);
             userRepository.save(alicehitchin);
+            userRepository.save(carlJones);
+            userRepository.save(jamesSmith);
 
             {
                 var note = new Note("Felt happy with work today.", NoteType.CHECKIN);
