@@ -164,10 +164,12 @@ public class ReminderService {
         meetings.forEach(meeting -> {
             try {
                 mailerService.sendMail(meeting.getRequester().getEmail(),
+                        meeting.getRequester().getName(),
                         "Meeting Reminder",
                         "You have a meeting with " + meeting.getRequestee().getName() + " in 1 hour."
                 );
                 mailerService.sendMail(meeting.getRequestee().getEmail(),
+                        meeting.getRequestee().getName(),
                         "Meeting Reminder",
                         "You have a meeting with " + meeting.getRequester().getName() + " in 1 hour."
                 );

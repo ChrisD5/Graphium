@@ -1,5 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<body th:text="${text}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphium</title>
+</head>
+
+<style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+    html,
+    body {
+        font-family: 'Open Sans', sans-serif;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    * {
+        -ms-text-size-adjust: 100%;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    img {
+        -ms-interpolation-mode:bicubic;
+    }
+
+    .wrapper {
+        width: 100%;
+        height: 100%;
+        max-height: 500px;
+    }
+
+    .wrapper-inner {
+        max-width: 600px;
+        width: 100%;
+        margin: auto;
+        padding: 20px 0 30px;
+        border-radius: 10px;
+    }
+
+    .header {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header-image {
+        width: 100%;
+        max-width: 100px;
+    }
+
+    .outer-table {
+        display: flex;
+        justify-content: center;
+    }
+
+    .content {
+        color: #000;
+        padding: 0 30px;
+        letter-spacing: 1.2px;
+        line-height: 22px;
+    }
+
+    .content__header {
+        font-size: 28px;
+        letter-spacing: 1.1px;
+        font-weight: 500;
+        margin-bottom: 30px;
+    }
+
+    .content__footer {
+        margin-top: 40px;
+    }
+</style>
+
+<body>
+<div class="wrapper" style="width: 100%;height: 100%;max-height: 500px;">
+    <div class="wrapper-inner" style="max-width: 600px;width: 100%;margin: auto;padding: 20px 0 30px;background: #ECEFF4;border-radius: 10px;">
+        <table class="outer-table" style="display: flex;justify-content: center;">
+            <tr>
+                <td class="header" style="width: 100%;text-align: center;">
+                    <img src="https://uploads-ssl.webflow.com/60916e3957537501584970b2/62275b5441a9fedd21e71c74_Graphium%20Butterfly.gif" alt="graphium" class="header-image" style="width: 100%;max-width: 100px;" width="100">
+                </td>
+            </tr>
+        </table>
+
+        <table class="content-table">
+            <tr>
+                <td class="content" style="color: #000;padding: 0 30px;letter-spacing: 1.2px;line-height: 22px;">
+                    <h1 class="content__header" style="font-size: 28px;letter-spacing: 1.1px;font-weight: 500;margin-bottom: 30px;" th:text="${'Hi ' + name + ','}">Hi</h1>
+
+                    <p th:text="${text}">
+                        Email Content
+                    </p>
+                    <a href="https://portal.graphium.ai" style="color: #434C5E;" target="_blank">https://portal.graphium.ai</a>
+
+                    <p class="content__footer" style="margin-top: 40px;">
+                        Thanks,<br>
+                        Graphium Employee Portal
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 </body>
 </html>
