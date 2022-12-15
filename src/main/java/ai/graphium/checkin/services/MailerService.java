@@ -3,7 +3,6 @@ package ai.graphium.checkin.services;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -18,10 +17,9 @@ public class MailerService {
     private JavaMailSender emailSender;
     private SpringTemplateEngine templateEngine;
 
-    @Async
-    public void sendMail(String to, String subject, String text) throws MessagingException {
+    public void sendMail(String to, String name, String subject, String text) throws MessagingException {
 
-        if (to.toLowerCase().endsWith("@grapium.ai")) {
+        if (to.toLowerCase().endsWith("@graphium.ai")) {
             System.err.println("Not sending email, since we're in a development stage!");
             return;
         }
@@ -31,6 +29,7 @@ public class MailerService {
 
         Context context = new Context();
         context.setVariable("text", text);
+        context.setVariable("name", name);
 
         var html = templateEngine.process("mail", context);
 
