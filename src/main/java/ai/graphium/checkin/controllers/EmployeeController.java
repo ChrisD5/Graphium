@@ -356,11 +356,19 @@ public class EmployeeController {
     }
 
     @PostMapping("/profile/edit")
-    public String formSubmit(@ModelAttribute EditEmployeeForm user, Authentication authentication, @RequestParam("image") MultipartFile file) throws IOException {
+    public String formSubmit(@ModelAttribute EditEmployeeForm user, Authentication authentication, @RequestParam("image") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
         var userLookUp = userRepository.findByEmail(authentication.getName());
+
+        if (file.getOriginalFilename().endsWith(".png")) {
+            userLookUp.setImage(file.getBytes());
+        } else {
+            redirectAttributes.addFlashAttribute("status", "error");
+            redirectAttributes.addFlashAttribute("message", "You can only upload png images");
+            return "redirect:/e/profile/edit";
+        }
+
         userLookUp.setName(user.getName());
         userLookUp.setPhone(user.getPhone());
-        userLookUp.setImage(file.getBytes());
         userRepository.save(userLookUp);
         return "redirect:/e/profile";
 

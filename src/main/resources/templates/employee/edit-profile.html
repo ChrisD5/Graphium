@@ -14,15 +14,15 @@
 
             </div>
             <div class="relative">
-                <img th:src="${image != null ? 'data:charset=utf-8;base64,' + image : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'}"
+                <img alt="Profile Picture"
                      class="w-34 h-34 bg-slate-100 mx-auto rounded-full shadow-xl absolute inset-x-0 top-0 -mt-8 flex items-center justify-center text-slate-600"
-                     alt="Profile Picture"/>
+                     th:src="${image != null ? 'data:charset=utf-8;base64,' + image : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg'}"/>
 
             </div>
         </div>
         <div class="mt-30 text-center border-b pb-6">
-            <a th:href="@{/e/profile}"
-               class="text-white py-1 px-2 uppercase rounded bg-slate-600 hover:bg-slate-700 shadow hover:shadow-lg font-medium text-xs transition transform hover:-translate-y-0.5">
+            <a class="text-white py-1 px-2 uppercase rounded bg-slate-600 hover:bg-slate-700 shadow hover:shadow-lg font-medium text-xs transition transform hover:-translate-y-0.5"
+               th:href="@{/e/profile}">
                 Finish Editing
             </a>
         </div>
@@ -31,17 +31,30 @@
 
             <h1 class="text-3xl font-xs text-nord-6">Update Details
             </h1>
-            <form action="#" th:action="@{/e/profile/edit}" th:object="${user}" method="post" enctype="multipart/form-data">
-                <p class="mt-4 text-nord-6">Full-Name: <input type="text" pattern="[a-zA-Z ]+" th:field="*{name}"
-                                                                th:value="${user.name}"
-                                                                class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
+            <form action="#" enctype="multipart/form-data" method="post"
+                  th:action="@{/e/profile/edit}" th:object="${user}">
+                <p class="rounded mb-3 p-2 text-nord-6 text-s italic mr-10"
+                   th:classappend="${status == 'error' ? 'bg-nord-11' : 'bg-nord-14'}"
+                   th:if="${status}"
+                   th:text="${status == 'error' ? 'Error: ' + message : 'Success: ' + message}">
+                    Error Finding Employee
                 </p>
-                <p class="mt-4 text-nord-6">Phone(+44): <input type="tel" pattern="[0-9+]{3}[0-9]{10}"
-                                                                 th:field="*{phone}" th:value="${user.phone}"
-                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
+                <p class="mt-4 text-nord-6">Full-Name: <input
+                        class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"
+                        pattern="[a-zA-Z ]+" th:field="*{name}"
+                        th:value="${user.name}"
+                        type="text"/>
                 </p>
-                <p class="mt-4 text-nord-6">Profile Picture: <input type="file" name="image" accept="image/*"
-                                                                 class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"/>
+                <p class="mt-4 text-nord-6">Phone(+44): <input
+                        class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"
+                        pattern="[0-9+]{3}[0-9]{10}"
+                        th:field="*{phone}" th:value="${user.phone}"
+                        type="tel"/>
+                </p>
+                <p class="mt-4 text-nord-6">Profile Picture: <input accept="image/*"
+                                                                    class="shadow appearance-none border rounded w-fit py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-nord-5"
+                                                                    name="image"
+                                                                    type="file"/>
                 </p>
                 <p class="mt-4 text-nord-6"><input type="submit" value="Submit"/> | <input type="reset"
                                                                                            value="Reset"/></p>
