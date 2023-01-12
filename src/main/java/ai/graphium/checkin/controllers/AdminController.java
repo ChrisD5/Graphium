@@ -7,7 +7,6 @@ import ai.graphium.checkin.entity.joins.SupervisorJoinTeam;
 import ai.graphium.checkin.entity.joins.TeamJoinCheckIn;
 import ai.graphium.checkin.enums.UserType;
 import ai.graphium.checkin.forms.*;
-import ai.graphium.checkin.repos.CheckInRepository;
 import ai.graphium.checkin.repos.TeamRepository;
 import ai.graphium.checkin.repos.UserRepository;
 import lombok.AllArgsConstructor;
@@ -34,7 +33,6 @@ public class AdminController {
     private UserRepository userRepository;
     private TeamRepository teamRepository;
     private PasswordEncoder passwordEncoder;
-
     private EntityManager entityManager;
 
     @GetMapping("")
@@ -171,16 +169,16 @@ public class AdminController {
         boolean employeeExists = userRepository.existsById(promoteEmployeeToSupervisorForm.getEmployee_id());
         if (!employeeExists) {
             redirectAttributes.addFlashAttribute("promstatus", "error");
-            redirectAttributes.addFlashAttribute("prommessage", "This employee does not exist");
+            redirectAttributes.addFlashAttribute("prommessage", "This employee does not exist"); //Edge case - no employee
             return "redirect:/admin/e";
         }
 
         User employee = userRepository.findById(promoteEmployeeToSupervisorForm.getEmployee_id());
-        employee.setSupervisor(true);
+        employee.setSupervisor(true); //Promote employee to supervisor
         userRepository.save(employee);
 
         redirectAttributes.addFlashAttribute("promstatus", "success");
-        redirectAttributes.addFlashAttribute("prommessage", String.format("The employee %s has been promoted to supervisor", employee.getName()));
+        redirectAttributes.addFlashAttribute("prommessage", String.format("The employee %s has been promoted to supervisor", employee.getName())); //Success message
         return "redirect:/admin/e";
     }
 
@@ -226,22 +224,22 @@ public class AdminController {
         boolean supervisorExists = userRepository.existsById(demoteSupervisorToEmployeeForm.getSupervisor_id());
         if (!supervisorExists) {
             redirectAttributes.addFlashAttribute("demstatus", "error");
-            redirectAttributes.addFlashAttribute("demmessage", "This employee does not exist");
+            redirectAttributes.addFlashAttribute("demmessage", "This employee does not exist"); //Edge case - no employee
             return "redirect:/admin/s";
         }
 
         User supervisor = userRepository.findById(demoteSupervisorToEmployeeForm.getSupervisor_id());
-        Team findTeam = teamRepository.findBySupervisor(supervisor);
+        Team findTeam = teamRepository.findBySupervisor(supervisor); //Find team
         if (findTeam != null) {
             redirectAttributes.addFlashAttribute("demstatus", "error");
-            redirectAttributes.addFlashAttribute("demmessage", "This supervisor is still assigned to a team");
+            redirectAttributes.addFlashAttribute("demmessage", "This supervisor is still assigned to a team"); //Edge case - supervisor is still assigned to a team
             return "redirect:/admin/s";
         }
         supervisor.setSupervisor(false);
         userRepository.save(supervisor);
 
         redirectAttributes.addFlashAttribute("demstatus", "success");
-        redirectAttributes.addFlashAttribute("demmessage", String.format("The supervisor %s has been demoted to employee", supervisor.getName()));
+        redirectAttributes.addFlashAttribute("demmessage", String.format("The supervisor %s has been demoted to employee", supervisor.getName())); //Success message
         return "redirect:/admin/s";
     }
 

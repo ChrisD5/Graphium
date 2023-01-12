@@ -186,24 +186,24 @@ public class EmployeeController {
 
     @PostMapping("/settings/alert/disable")
     public String disableAlert(Authentication authentication) {
-        var user = userRepository.findByEmail(authentication.getName());
-        user.setSettingsAlertDisabled(!user.isSettingsAlertDisabled());
-        userRepository.save(user);
+        var user = userRepository.findByEmail(authentication.getName()); //Get user
+        user.setSettingsAlertDisabled(!user.isSettingsAlertDisabled()); //Toggle alert disabled
+        userRepository.save(user); //Save user
         return "redirect:/e/settings";
     }
 
     @PostMapping("/settings/alert/toggleday")
     public String disableAlertDay(Authentication authentication, @ModelAttribute ToggleEmployeeAlertDayForm toggleEmployeeAlertDayForm) {
-        var user = userRepository.findByEmail(authentication.getName());
+        var user = userRepository.findByEmail(authentication.getName()); //Get user
 
-        String day = toggleEmployeeAlertDayForm.getDay();
-        if (user.getSettingsAlertDayDisabled().contains(day)) {
-            user.getSettingsAlertDayDisabled().remove(day);
+        String day = toggleEmployeeAlertDayForm.getDay(); //Get day
+        if (user.getSettingsAlertDayDisabled().contains(day)) { //If day is already disabled
+            user.getSettingsAlertDayDisabled().remove(day);  //Remove day from disabled days
         } else {
-            user.getSettingsAlertDayDisabled().add(day);
+            user.getSettingsAlertDayDisabled().add(day); //Add day to disabled days
         }
 
-        userRepository.save(user);
+        userRepository.save(user); //Save user
         return "redirect:/e/settings";
     }
 
@@ -346,9 +346,9 @@ public class EmployeeController {
 
     @GetMapping("/profile/edit")
     public String profileForm(Model model, Authentication authentication) {
-        var userLookUp = userRepository.findByEmail(authentication.getName());
-        if (userLookUp == null) {
-            return "redirect:/e/profile";
+        var userLookUp = userRepository.findByEmail(authentication.getName()); // get user from database
+        if (userLookUp == null) { // if user is not found
+            return "redirect:/e/profile"; // redirect to profile page
         }
         model.addAttribute("user", new EditEmployeeForm(userLookUp.getName(), userLookUp.getPhone()));
         model.addAttribute("image", userLookUp.getImage() != null ? Base64.getEncoder().encodeToString(userLookUp.getImage()) : null);
@@ -359,16 +359,17 @@ public class EmployeeController {
     public String formSubmit(@ModelAttribute EditEmployeeForm user, Authentication authentication, @RequestParam("image") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
         var userLookUp = userRepository.findByEmail(authentication.getName());
 
-        if (file.getOriginalFilename().endsWith(".png")) {
-            userLookUp.setImage(file.getBytes());
+
+        if (file.getOriginalFilename().endsWith(".png")) { // check file type to prevent xss
+            userLookUp.setImage(file.getBytes()); //add updated profile picture image to profile page
         } else {
             redirectAttributes.addFlashAttribute("status", "error");
             redirectAttributes.addFlashAttribute("message", "You can only upload png images");
             return "redirect:/e/profile/edit";
         }
 
-        userLookUp.setName(user.getName());
-        userLookUp.setPhone(user.getPhone());
+        userLookUp.setName(user.getName()); // update name
+        userLookUp.setPhone(user.getPhone()); // update phone number
         userRepository.save(userLookUp);
         return "redirect:/e/profile";
 

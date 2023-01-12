@@ -48,8 +48,8 @@ public class ReminderService {
                 .filter(user -> {
                     var checkIns = user.getCheckIns();
                     var supervisor = user.getTeam().getSupervisor();
-                    var daysToDisable = user.getSettingsAlertDayDisabled()
-                            .stream().map(day -> {
+                    var daysToDisable = user.getSettingsAlertDayDisabled() //get day picked to disable alerts
+                            .stream().map(day -> {    //creates a stream of the elements in the list.
                                 switch (day.toLowerCase()) {
                                     case "monday":
                                         return Calendar.MONDAY;
@@ -64,9 +64,9 @@ public class ReminderService {
                                     default:
                                         return -1;
                                 }
-                            }).collect(Collectors.toSet());
+                            }).collect(Collectors.toSet()); //convert the stream back into a set.
 
-                    if (daysToDisable.contains(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))) {
+                    if (daysToDisable.contains(Calendar.getInstance().get(Calendar.DAY_OF_WEEK))) { // Check whether the current day of the week is contained in the set "daysToDisable"
                         return false;
                     }
 

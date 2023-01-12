@@ -26,7 +26,7 @@ public class HomeController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logoutPage() {
-        SecurityContextHolder.getContext().setAuthentication(null);
+        SecurityContextHolder.getContext().setAuthentication(null); // clear authentication for user
         return "redirect:/login";
     }
 

@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .csrf()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/logo.gif")
                 .permitAll()
                 .antMatchers("/js/**")
