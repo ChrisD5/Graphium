@@ -28,8 +28,7 @@
                        th:classappend="${#httpServletRequest.getRequestURI() == '/s' ? 'text-nord-4 bg-nord-0 rounded md:bg-transparent md:text-nord-0 md:p-0 overline decoration-nord-0':'text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0'}"
                        th:href="@{/s}">Home</a>
                 </li>
-                <li sec:authorize="hasRole('ROLE_EMPLOYEE')"> // authorizes the navbar item to only be visible to
-                    supervisor
+                <li sec:authorize="hasRole('ROLE_EMPLOYEE')"> <!-- Only show if user has role 'ROLE_EMPLOYEE' -->
                     <a aria-current="page"
                        class="text-nord-0 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-nord-3 md:p-0 block py-2 pl-3 pr-4"
                        th:href="@{/e}">Switch View</a>
