@@ -18,4 +18,4 @@ gradle build
 ```
 java -jar checkin-0.0.1-SNAPSHOT.jar
 ```
-### The project should then be running, navigate to localhost: 8080 to access the webpage.
+### The project should then be running, navigate to https://localhost to access the webpage.
