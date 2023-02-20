@@ -5,6 +5,14 @@
 
 ### Database: MariaDB    Username: checkin    Password: checkin6
 
+### Use following commands:
+
+### mysql -u root -p
+### comsc
+### create user 'checkin' identified by 'checkin6';
+### create database if not exists checkin;
+### grant all on checkin.* to 'checkin'@'%';
+
 ### To build your project, open a terminal window, navigate to the root directory of your project, and run the following command:
 
 ```
