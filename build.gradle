@@ -15,6 +15,18 @@ configurations {
     }
 }
 
+checkstyle {
+    toolVersion = 9.2
+    checkstyleMain.enabled = true
+    checkstyleTest.enabled = false
+}
+
+checkstyleMain {
+    configFile = file("config/checkstyle/checkstyleMain.xml")
+    maxErrors = 10
+}
+
+
 repositories {
     mavenCentral()
 }
