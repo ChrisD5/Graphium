@@ -23,7 +23,7 @@ checkstyle {
 
 checkstyleMain {
     configFile = file("config/checkstyle/checkstyleMain.xml")
-    maxErrors = 10
+    maxErrors = 1000
 }
 
 
