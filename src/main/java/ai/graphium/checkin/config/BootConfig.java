@@ -20,6 +20,10 @@ public class BootConfig {
     private static final String DEFAULT_USERNAME = "admin@graphium.ai";
     private static final String DEFAULT_PASSWORD = "admin";
 
+    private static final String DEFAULT_USERNAME2 = "admin2@graphium.ai";
+
+    private static final String DEFAULT_PASSWORD2 = "admin2";
+
     @Autowired
     @Transactional
     public void configure(PasswordEncoder passwordEncoder,
@@ -41,6 +45,16 @@ public class BootConfig {
             return;
         }
         var pass = "frog";
+
+        //adding second admin account
+        var admin2 = userRepository
+                .findByEmail(DEFAULT_USERNAME2);
+        if (admin2 == null) {
+            admin2 = new User(DEFAULT_USERNAME2, passwordEncoder.encode(DEFAULT_PASSWORD2), UserType.ADMIN, "Admin2", "+441234567890");
+            userRepository.save(admin2);
+        } else {
+            return;
+        }
 
         if (authProperties.isGenerateDefaultUsers()) {
             var andrewsharp = userRepository
