@@ -19,10 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.JoinType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @Controller
@@ -111,8 +108,8 @@ public class AdminController {
 
     @PostMapping("/e/create")
     public String adminCreateEmployeeSubmit(RedirectAttributes redirectAttributes, @ModelAttribute CreateEmployeeForm employee) {
-        boolean emailExists = userRepository.existsByEmail(employee.getEmail());
-        if (emailExists) {
+        Optional<Long> userId = userRepository.findIdByEmail(employee.getEmail());
+        if (userId.isPresent()) {
             redirectAttributes.addFlashAttribute("status", "error");
             redirectAttributes.addFlashAttribute("message", "Email Address Already Exists");
             redirectAttributes.addFlashAttribute("employee", employee);
